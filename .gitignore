@@ -1,0 +1,6 @@
+#Frontend folders
+frontend/node_modules
+
+
+#Backend folders
+backend/node_modules
