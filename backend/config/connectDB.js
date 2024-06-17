@@ -10,7 +10,6 @@ const connectDB = async () => {
       useCreateIndex: true,
       useFindAndModify: false,
     });
-
     console.log("Connected To DB.");
   } catch (err) {
     console.error(err.message);
