@@ -1,19 +1,17 @@
 const mongoose = require("mongoose");
 
-const DB_URI = process.env.DB_URI;
+require("dotenv").config({
+  path: "../backend/.env",
+});
 
-const connectDB = async () => {
+const DB_URI = process.env.DATABASE_URI;
+const connectToDB = () => {
   try {
-    mongoose.connect(DB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    });
+    mongoose.connect(DB_URI);
     console.log("Connected To DB.");
   } catch (err) {
     console.error(err.message);
   }
 };
 
-module.exports = connectDB;
+module.exports = connectToDB;
