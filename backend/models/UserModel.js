@@ -14,10 +14,6 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  Date: {
-    type: Date,
-    default: Date.now,
-  },
   todos: [
     {
       task: {

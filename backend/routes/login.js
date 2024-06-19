@@ -5,7 +5,7 @@ const userLogin = async (req, res) => {
   const { username, password } = req.body;
 
   // Check if password is entered
-  if (!password) {
+  if (!password || password === "") {
     res.json({ msg: "Please enter password!" });
   }
 

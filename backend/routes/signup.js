@@ -4,8 +4,7 @@ const userModel = require("../models/UserModel");
 const userSignUp = async (req, res) => {
   try {
     let { username, email, password } = req.body;
-    let salt = bcrypt.genSalt(10);
-    const hashedPassword = bcrypt.hash(password, salt);
+    const hashedPassword = (await bcrypt.hash(password, 10)).toString();
     await userModel.create({
       username: username,
       email: email,

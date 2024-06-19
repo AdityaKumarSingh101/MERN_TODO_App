@@ -26,7 +26,7 @@ const auth = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    return res.json({ accessToken });
+    res.json({ accessToken });
   } else {
     // If cookie exists, verify the jwt and generate a new access token
     const token = req.cookies.jwt;
@@ -44,7 +44,7 @@ const auth = async (req, res) => {
         const accessToken = jwt.sign(payload, accessSecret, {
           expiresIn: "15m",
         });
-        return res.json({ accessToken });
+        res.json({ accessToken });
       }
     });
   }

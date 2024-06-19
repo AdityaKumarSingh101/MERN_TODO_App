@@ -7,10 +7,16 @@ require("dotenv").config({ path: "../backend/.env" });
 const userSignUp = require("./routes/signup");
 const userLogin = require("./routes/login");
 const connectToDB = require("./config/connectDB");
+const {
+  getAllTodos,
+  createTodo,
+  updateTodo,
+  deleteTodo,
+} = require("./routes/user");
 
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ extended: false }));
 app.use(cookieParser());
 
 const PORT = process.env.PORT;
@@ -22,5 +28,7 @@ app.listen(PORT, () => {
   connectToDB();
 });
 
-app.post("/SignUp", auth, userSignUp);
-app.post("/Login", auth, userLogin);
+app.post("/SignUp", userSignUp);
+app.post("/Login", userLogin);
+app.get("/users/:userid/todos/", getAllTodos);
+app.post("/users/:userid/todos/create", createTodo);
