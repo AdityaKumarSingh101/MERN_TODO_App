@@ -12,15 +12,15 @@ const getAllTodos = async (req, res) => {
 const createTodo = async (req, res) => {
   const userid = req.params.userid;
 
-  const todo = {
-    task: req.body.task,
-    createdOn: Date.now,
-    completed: req.body.completed || false,
-    tags: req.body.tags,
-  };
-
+  const task = req.body.task,
+    tags = req.body.tags;
   await User.findByIdAndUpdate(userid, {
-    $push: { todos: { todo } },
+    $push: {
+      todos: {
+        task: task,
+        tags: tags,
+      },
+    },
   });
 };
 
@@ -28,16 +28,22 @@ const updateTodo = async (req, res) => {
   const userid = req.params.userid;
   const todoid = req.params.todoid;
 
-  const user = await User.findById(userid);
+  const task = req.body.task,
+    createdOn = todo.createdOn,
+    completed = req.body.completed,
+    tags = req.body.tags;
 
-  const todo = await user.todos.findById(todoid);
-
-  const updatedTodo = {
-    task: req.body.task,
-    createdOn: todo.createdOn,
-    completed: req.body.completed,
-    tags: req.body.tags,
-  };
+  await User.updateOne(
+    { _id: userid, "todos._id": todoid },
+    {
+      $set: {
+        "todos.$.task": task,
+        "todos.$.createdOn": createdOn,
+        "todos.$.completed": completed,
+        "todos.$.tags": tags,
+      },
+    }
+  );
 };
 
 const deleteTodo = async (req, res) => {
