@@ -29,16 +29,19 @@ const updateTodo = async (req, res) => {
   const todoid = req.params.todoid;
 
   const task = req.body.task,
-    createdOn = todo.createdOn,
-    completed = req.body.completed,
     tags = req.body.tags;
+  let completed;
+  if (req.body.completed === "true") {
+    completed = true;
+  } else {
+    completed = false;
+  }
 
   await User.updateOne(
     { _id: userid, "todos._id": todoid },
     {
       $set: {
         "todos.$.task": task,
-        "todos.$.createdOn": createdOn,
         "todos.$.completed": completed,
         "todos.$.tags": tags,
       },
