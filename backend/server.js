@@ -32,3 +32,5 @@ app.post("/SignUp", userSignUp);
 app.post("/Login", userLogin);
 app.get("/users/:userid/todos/", getAllTodos);
 app.post("/users/:userid/todos/create", createTodo);
+app.put("/users/:userid/todos/update/:todoid", updateTodo);
+app.delete("/users/:userid/todos/delete/:todoid", deleteTodo);

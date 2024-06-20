@@ -1,12 +1,10 @@
-const UserModel = require("../models/UserModel");
 const User = require("../models/UserModel");
 
 const getAllTodos = async (req, res) => {
   const userId = req.params.userid;
 
   const user = await User.findById(userId);
-
-  let todos = user.todos;
+  const todos = user.todos;
 
   res.json({ todos });
 };
@@ -14,23 +12,39 @@ const getAllTodos = async (req, res) => {
 const createTodo = async (req, res) => {
   const userid = req.params.userid;
 
-  const task = req.body.task,
-    createdOn = Date.now,
-    completed = req.body.completed || false,
-    tags = req.body.tags;
-
   const todo = {
-    task: task,
-    createdOn: createdOn,
-    completed: completed,
-    tags: tags,
+    task: req.body.task,
+    createdOn: Date.now,
+    completed: req.body.completed || false,
+    tags: req.body.tags,
   };
 
-  await User.findByIdAndUpdate(userid, { $push: { todos: { todo } } });
+  await User.findByIdAndUpdate(userid, {
+    $push: { todos: { todo } },
+  });
 };
 
-const updateTodo = async (req, res) => {};
+const updateTodo = async (req, res) => {
+  const userid = req.params.userid;
+  const todoid = req.params.todoid;
 
-const deleteTodo = async (req, res) => {};
+  const user = await User.findById(userid);
+
+  const todo = await user.todos.findById(todoid);
+
+  const updatedTodo = {
+    task: req.body.task,
+    createdOn: todo.createdOn,
+    completed: req.body.completed,
+    tags: req.body.tags,
+  };
+};
+
+const deleteTodo = async (req, res) => {
+  const userid = req.params.userid;
+  const todoid = req.params.todoid;
+
+  await User.findByIdAndUpdate(userid, { $pull: { todos: { _id: todoid } } });
+};
 
 module.exports = { getAllTodos, createTodo, updateTodo, deleteTodo };
