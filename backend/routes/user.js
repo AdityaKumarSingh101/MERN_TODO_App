@@ -22,6 +22,11 @@ const createTodo = async (req, res) => {
       },
     },
   });
+
+  const user = User.findById(userid);
+  const todos = user.todos;
+
+  res.json({ todos });
 };
 
 const updateTodo = async (req, res) => {
@@ -33,7 +38,8 @@ const updateTodo = async (req, res) => {
   let completed;
   if (req.body.completed === "true") {
     completed = true;
-  } else {
+  }
+  if (req.body.completed === "false") {
     completed = false;
   }
 
@@ -47,6 +53,11 @@ const updateTodo = async (req, res) => {
       },
     }
   );
+
+  const user = User.findById(userid);
+  const todos = user.todos;
+
+  res.json({ todos });
 };
 
 const deleteTodo = async (req, res) => {
@@ -54,6 +65,11 @@ const deleteTodo = async (req, res) => {
   const todoid = req.params.todoid;
 
   await User.findByIdAndUpdate(userid, { $pull: { todos: { _id: todoid } } });
+
+  const user = User.findById(userid);
+  const todos = user.todos;
+
+  res.json({ todos });
 };
 
 module.exports = { getAllTodos, createTodo, updateTodo, deleteTodo };
