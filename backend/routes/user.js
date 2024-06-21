@@ -23,7 +23,7 @@ const createTodo = async (req, res) => {
     },
   });
 
-  const user = User.findById(userid);
+  const user = await User.findById(userid);
   const todos = user.todos;
 
   res.json({ todos });
@@ -54,7 +54,7 @@ const updateTodo = async (req, res) => {
     }
   );
 
-  const user = User.findById(userid);
+  const user = await User.findById(userid);
   const todos = user.todos;
 
   res.json({ todos });
@@ -66,7 +66,7 @@ const deleteTodo = async (req, res) => {
 
   await User.findByIdAndUpdate(userid, { $pull: { todos: { _id: todoid } } });
 
-  const user = User.findById(userid);
+  const user = await User.findById(userid);
   const todos = user.todos;
 
   res.json({ todos });
