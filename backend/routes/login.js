@@ -6,14 +6,14 @@ const userLogin = async (req, res) => {
 
   // Check if password is entered
   if (!password || password === "") {
-    res.json({ msg: "Please enter password!" });
+    res.json("Please enter password!");
   }
 
   // Check if user exists
   const existingUser = userModel.findOne({ username: username });
 
   if (!existingUser) {
-    res.json({ msg: "User not found!" });
+    res.json("User not found!");
   }
 
   let passMatch = bcrypt.compare(password, existingUser.password);
@@ -23,7 +23,7 @@ const userLogin = async (req, res) => {
     let todos = existingUser.todos;
     res.json({ todos });
   } else {
-    res.json({ msg: "Username / Password Incorrect!" });
+    res.json("Username / Password Incorrect!");
   }
 };
 

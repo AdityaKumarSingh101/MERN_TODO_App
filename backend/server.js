@@ -31,16 +31,16 @@ app.listen(PORT, () => {
 // Routing
 
 //SignUp
-app.post("/SignUp", auth, userSignUp);
+app.post("/SignUp", userSignUp);
 
 // Login
-app.post("/Login", auth, userLogin);
+app.post("/Login", userLogin);
 
 // All User Todos
-app.get("/users/:userid/todos/", auth, getAllTodos);
+app.get("/users/:userid/todos/", getAllTodos);
 
 // Add Todo
-app.post("/users/:userid/todos/create", auth, createTodo);
+app.post("/users/:userid/todos/create", createTodo);
 
 // Update Todo
 app.put("/users/:userid/todos/update/:todoid", updateTodo);
