@@ -1,9 +1,9 @@
 const express = require("express");
-const auth = require("./jwtAuth/auth");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config({ path: "../backend/.env" });
 
+const auth = require("./jwtAuth/auth");
 const userSignUp = require("./routes/signup");
 const userLogin = require("./routes/login");
 const connectToDB = require("./config/connectDB");
@@ -31,16 +31,16 @@ app.listen(PORT, () => {
 // Routing
 
 //SignUp
-app.post("/SignUp", userSignUp);
+app.post("/SignUp", auth, userSignUp);
 
 // Login
-app.post("/Login", userLogin);
+app.post("/Login", auth, userLogin);
 
 // All User Todos
-app.get("/users/:userid/todos/", getAllTodos);
+app.get("/users/:userid/todos/", auth, getAllTodos);
 
 // Add Todo
-app.post("/users/:userid/todos/create", createTodo);
+app.post("/users/:userid/todos/create", auth, createTodo);
 
 // Update Todo
 app.put("/users/:userid/todos/update/:todoid", updateTodo);

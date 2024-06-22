@@ -10,20 +10,20 @@ const userLogin = async (req, res) => {
   }
 
   // Check if user exists
-  const existingUser = await userModel.findOne({ username: username });
+  const existingUser = userModel.findOne({ username: username });
 
   if (!existingUser) {
     res.json({ msg: "User not found!" });
   }
 
-  let passMatch = await bcrypt.compare(password, existingUser.password);
+  let passMatch = bcrypt.compare(password, existingUser.password);
 
   // Check if password matches
   if (passMatch) {
     let todos = existingUser.todos;
     res.json({ todos });
   } else {
-    res.json({ msg: "Authentication Failed!" });
+    res.json({ msg: "Username / Password Incorrect!" });
   }
 };
 
