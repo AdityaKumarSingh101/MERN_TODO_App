@@ -1,0 +1,32 @@
+.input {
+  width: 300px;
+  height: 30px;
+  border: solid 1px black;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+.LoginTitle {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+#LoginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.loginSubmitBtn {
+  width: 300px;
+  height: 50px;
+  margin-top: 20px;
+  border-radius: 10px;
+  color: black;
+}
+
+.loginSubmitBtn:hover {
+  cursor: pointer;
+  color: white;
+  background-color: black;
+}

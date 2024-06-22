@@ -3,8 +3,14 @@ const userModel = require("../models/UserModel");
 
 const userSignUp = async (req, res) => {
   try {
-    let { firstname, lastname, username, email, password } = req.body;
-    const hashedPassword = (await bcrypt.hash(password, 10)).toString();
+    let { firstname, lastname, username, email, password, confirmPassword } =
+      req.body;
+
+    const hashedPassword =
+      password === confirmPassword
+        ? (await bcrypt.hash(password, 10)).toString()
+        : res.json({ msg: "Passwords dont match!" });
+
     await userModel.create({
       username: username,
       email: email,

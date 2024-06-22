@@ -28,9 +28,22 @@ app.listen(PORT, () => {
   connectToDB();
 });
 
+// Routing
+
+//SignUp
 app.post("/SignUp", userSignUp);
+
+// Login
 app.post("/Login", userLogin);
+
+// All User Todos
 app.get("/users/:userid/todos/", getAllTodos);
+
+// Add Todo
 app.post("/users/:userid/todos/create", createTodo);
+
+// Update Todo
 app.put("/users/:userid/todos/update/:todoid", updateTodo);
+
+// Delete Todo
 app.delete("/users/:userid/todos/delete/:todoid", deleteTodo);

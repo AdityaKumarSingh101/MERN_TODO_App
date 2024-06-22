@@ -20,7 +20,8 @@ const userLogin = async (req, res) => {
 
   // Check if password matches
   if (passMatch) {
-    res.json({ msg: "User Login Success!" });
+    let todos = existingUser.todos;
+    res.json({ todos });
   } else {
     res.json({ msg: "Authentication Failed!" });
   }

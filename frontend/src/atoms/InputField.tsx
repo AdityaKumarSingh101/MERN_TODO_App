@@ -1,72 +1,38 @@
 type InputFieldProps = {
+  id: string;
+  name: string;
+  className: string;
+  disabled: boolean;
   type: string;
   value: string;
   placeholder: string;
-  onChange: () => void;
+  onChange: (e: any) => void;
 };
 
 const InputField: React.FC<InputFieldProps> = ({
+  id,
+  name,
+  className,
+  disabled,
   type,
   value,
   placeholder,
   onChange,
 }) => {
-  switch (type) {
-    case "text":
-      return (
-        <input
-          type="text"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case "checkbox":
-      return (
-        <input
-          type="checkbox"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case "date":
-      return (
-        <input
-          type="date"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case "email":
-      return (
-        <input
-          type="email"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case "radio":
-      return (
-        <input
-          type="radio"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-    case "password":
-      return (
-        <input
-          type="password"
-          placeholder={placeholder}
-          value={value}
-          onChange={onChange}
-        />
-      );
-  }
+  return (
+    <>
+      <input
+        type={type}
+        name={name}
+        id={id}
+        className={className}
+        disabled={disabled}
+        value={value}
+        placeholder={placeholder}
+        onChange={onChange}
+      />
+    </>
+  );
 };
 
 export default InputField;
