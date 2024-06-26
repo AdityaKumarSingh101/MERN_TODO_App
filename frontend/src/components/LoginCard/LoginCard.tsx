@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import InputField from "../../atoms/InputField";
@@ -8,13 +9,21 @@ import "./LoginCard.css";
 
 export default function LoginPage() {
   const loginURL = "http://localhost:3001/Login";
-
+  const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   async function handleSubmit() {
-    await axios.post(loginURL).then((res) => {
-      res.data;
+    await axios.post(loginURL, { username, password }).then((res) => {
+      if (res.data === "Please enter username / password!") {
+        alert("Please enter username / password!");
+      } else if (res.data === "User not found!") {
+        alert("User not found! Please Sign Up before logging in.");
+      } else if (res.data === "Username / Password Incorrect!") {
+        alert("Username / Password Incorrect!");
+      } else {
+        navigate("/Dashboard");
+      }
     });
   }
   return (

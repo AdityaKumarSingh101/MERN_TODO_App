@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import InputField from "../../atoms/InputField";
@@ -8,6 +9,7 @@ import "./SignUpCard.css";
 
 export default function SignUpPage() {
   const signUpURL = "http://localhost:3001/SignUp";
+  const navigate = useNavigate();
 
   const [inputs, setInputs] = useState({
     firstname: "",
@@ -24,14 +26,24 @@ export default function SignUpPage() {
   }
 
   async function handleFormSubmit() {
-    await axios.post(signUpURL, {
-      firstname: inputs.firstname,
-      lastname: inputs.lastname,
-      username: inputs.username,
-      email: inputs.email,
-      password: inputs.password,
-      confirmPassword: inputs.confirmPassword,
-    });
+    await axios
+      .post(signUpURL, {
+        firstname: inputs.firstname,
+        lastname: inputs.lastname,
+        username: inputs.username,
+        email: inputs.email,
+        password: inputs.password,
+        confirmPassword: inputs.confirmPassword,
+      })
+      .then((res) => {
+        if (res.data === "User Registration Successful!") {
+          navigate("/");
+        } else if (res.data === "Passwords dont match!") {
+          alert("Passwords dont match!");
+        } else {
+          alert("Server Error!");
+        }
+      });
   }
   return (
     <div className="SignUpPage-Container">

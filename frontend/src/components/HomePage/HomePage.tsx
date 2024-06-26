@@ -7,7 +7,8 @@ import SignUpPage from "../SignUpCard/SignUpCard";
 import "./HomePage.css";
 
 export default function HomePage() {
-  let [displayLogin, setDisplayLogin] = useState(false);
+  let [displayLogin, setDisplayLogin] = useState(true);
+
   return (
     <div className="HomePage-Container">
       <div className="HeroImage-Container">

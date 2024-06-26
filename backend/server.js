@@ -3,21 +3,21 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 require("dotenv").config({ path: "../backend/.env" });
 
-const auth = require("./jwtAuth/auth");
-const userSignUp = require("./routes/signup");
-const userLogin = require("./routes/login");
+//const auth = require("./jwtAuth/auth");
+const userSignUp = require("./controllers/signup");
+const userLogin = require("./controllers/login");
 const connectToDB = require("./config/connectDB");
 const {
   getAllTodos,
   createTodo,
   updateTodo,
   deleteTodo,
-} = require("./routes/user");
+} = require("./controllers/userTodos");
 
 const app = express();
 app.use(cors());
-app.use(express.json({ extended: false }));
-app.use(cookieParser());
+app.use(express.json());
+//app.use(cookieParser());
 
 const PORT = process.env.PORT;
 
