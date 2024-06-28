@@ -24,6 +24,10 @@
   background-color: rgb(88, 88, 204);
   margin-right: 20px;
   padding: 0;
+  transition: width 0.5s;
+}
+.HeroImage-Container:hover {
+  width: 80%;
 }
 
 .Button-Container {

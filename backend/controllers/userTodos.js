@@ -6,7 +6,7 @@ const getAllTodos = async (req, res) => {
   const user = await User.findById(userId);
   const todos = user.todos;
 
-  res.json({ todos });
+  res.json(todos);
 };
 
 const createTodo = async (req, res) => {
@@ -26,7 +26,7 @@ const createTodo = async (req, res) => {
   const user = await User.findById(userid);
   const todos = user.todos;
 
-  res.json({ todos });
+  res.json(todos);
 };
 
 const updateTodo = async (req, res) => {
@@ -57,7 +57,7 @@ const updateTodo = async (req, res) => {
   const user = await User.findById(userid);
   const todos = user.todos;
 
-  res.json({ todos });
+  res.json(todos);
 };
 
 const deleteTodo = async (req, res) => {
@@ -69,7 +69,7 @@ const deleteTodo = async (req, res) => {
   const user = await User.findById(userid);
   const todos = user.todos;
 
-  res.json({ todos });
+  res.json(todos);
 };
 
 module.exports = { getAllTodos, createTodo, updateTodo, deleteTodo };

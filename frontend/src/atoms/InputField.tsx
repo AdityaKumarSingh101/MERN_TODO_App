@@ -4,7 +4,7 @@ type InputFieldProps = {
   className: string;
   disabled: boolean;
   type: string;
-  value: string;
+  value: any;
   placeholder: string;
   onChange: (e: any) => void;
 };

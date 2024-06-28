@@ -7,6 +7,7 @@ require("dotenv").config({ path: "../backend/.env" });
 const userSignUp = require("./controllers/signup");
 const userLogin = require("./controllers/login");
 const connectToDB = require("./config/connectDB");
+const { fetchUserData } = require("./controllers/userData");
 const {
   getAllTodos,
   createTodo,
@@ -35,6 +36,9 @@ app.post("/SignUp", userSignUp);
 
 // Login
 app.post("/Login", userLogin);
+
+// Get User Data
+app.get("/users/:userid", fetchUserData);
 
 // All User Todos
 app.get("/users/:userid/todos/", getAllTodos);

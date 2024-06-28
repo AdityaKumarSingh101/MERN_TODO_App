@@ -19,6 +19,7 @@ const userLogin = async (req, res) => {
   let passMatch = await bcrypt.compare(password, user.password);
 
   const userData = {
+    id: user._id,
     name: {
       first: user.name.first,
       last: user.name.last,

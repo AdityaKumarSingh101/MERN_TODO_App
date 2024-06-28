@@ -22,6 +22,7 @@ export default function LoginPage() {
       } else if (res.data === "Username / Password Incorrect!") {
         alert("Username / Password Incorrect!");
       } else {
+        localStorage.setItem("UserId", res.data.id);
         navigate("/Dashboard");
       }
     });
