@@ -1,4 +1,7 @@
 const mongoose = require("mongoose");
+const dayjs = require("dayjs");
+const localizedFormat = require("dayjs/plugin/localizedFormat");
+dayjs.extend(localizedFormat);
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -30,8 +33,10 @@ const UserSchema = new mongoose.Schema({
         required: true,
       },
       createdOn: {
-        type: Date,
-        default: Date.now,
+        type: String,
+        default: () => {
+          return dayjs().format("ll");
+        },
       },
       completed: {
         type: Boolean,

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import FetchAllTodos from "../Todos/FetchTodos/FetchTodos";
+import { useNavigate } from "react-router-dom";
+
+import Todos from "../Todos/Todos";
 
 type UserData = {
   id: string;
@@ -54,14 +56,32 @@ export default function Dashboard() {
     fetchUserData();
   }, []);
 
+  const navigate = useNavigate();
+
+  function handleLogout() {
+    localStorage.removeItem("UserId");
+    navigate("/");
+  }
+
   return (
-    <div>
-      <h1>Dashboard</h1>
-      <div>
-        Name: {`${userData.name.first} ${userData.name.last}`}
-        Email: {userData.email}
-        Username: {userData.username}
-        <FetchAllTodos userid={userId as string} />
+    // Contains the whole dashboard
+    <div className="flex flex-col">
+      {/*Contains the Dashboard NavBar */}
+      <div className="flex flex-row justify-between p-1 bg-black text-white">
+        <h1 className="mt-1 ml-3 font-sans text-lg">
+          Hello, {userData.username}
+        </h1>
+        <button
+          id="logoutBtn"
+          className="w-16 h-10 border-[--border-color] border-2 rounded-md text-[--text-color] font-serif font-normal text-md mr-3 hover:bg-[--border-color] hover:text-white"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+      </div>
+      {/*Contains the Todos Section*/}
+      <div className="w-[500px] justify-center">
+        <Todos userid={userId as string} />
       </div>
     </div>
   );

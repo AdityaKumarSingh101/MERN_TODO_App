@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import Button from "../../atoms/Button";
-import LoginPage from "../LoginCard/LoginCard";
-import SignUpPage from "../SignUpCard/SignUpCard";
+import LoginPage from "../Login/Login";
+import SignUpPage from "../SignUp/SignUp";
 
 import "./HomePage.css";
 

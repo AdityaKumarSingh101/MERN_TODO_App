@@ -1,4 +1,7 @@
 const User = require("../models/UserModel");
+const dayjs = require("dayjs");
+const localizedFormat = require("dayjs/plugin/localizedFormat");
+dayjs.extend(localizedFormat);
 
 const getAllTodos = async (req, res) => {
   const userId = req.params.userid;
@@ -13,11 +16,13 @@ const createTodo = async (req, res) => {
   const userid = req.params.userid;
 
   const task = req.body.task,
-    tags = req.body.tags;
+    createdOn = dayjs().format("dddd, DD MMM");
+  tags = req.body.tags;
   await User.findByIdAndUpdate(userid, {
     $push: {
       todos: {
         task: task,
+        createdOn: createdOn,
         tags: tags,
       },
     },
