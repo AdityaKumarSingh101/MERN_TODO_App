@@ -79,9 +79,12 @@ export default function Dashboard() {
           Logout
         </button>
       </div>
-      {/*Contains the Todos Section*/}
-      <div className="w-[500px] justify-center">
-        <Todos userid={userId as string} />
+      {/*Contains the rest of dashboard*/}
+      <div className="flex flex-row">
+        {/*Contains the dashboard links*/}
+        <div className=" border-black border-2 mx-auto my-40">
+          <Todos userid={userId as string} />
+        </div>
       </div>
     </div>
   );

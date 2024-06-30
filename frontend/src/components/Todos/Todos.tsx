@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import { TodoContainer } from "../../atoms/TodoContainer";
+import { TodoContainer } from "./TodoContainer";
 
 type Todos = [
   {
@@ -11,14 +11,6 @@ type Todos = [
     tags: [];
   }
 ];
-
-type Todo = {
-  id: string;
-  task: string;
-  completed: string;
-  createdOn: string;
-  tags: [];
-};
 
 export default function Todos({ userid }: { userid: string }) {
   const fetchTodoDataURL = `http://localhost:3001/users/${userid}/todos`;
@@ -32,14 +24,6 @@ export default function Todos({ userid }: { userid: string }) {
       tags: [],
     },
   ]);
-
-  const [updatedTodo, setUpdatedTodo] = useState<Todo>({
-    id: "",
-    task: "",
-    completed: "",
-    createdOn: "",
-    tags: [],
-  });
 
   const setTodosFromResponse = (todoResponse: any) => {
     const newTodos = todoResponse.map((todo: any) => ({
@@ -74,7 +58,40 @@ export default function Todos({ userid }: { userid: string }) {
                 createdOn={todo.createdOn}
                 completed={todo.completed}
                 tags={todo.tags}
-                updateTodo={() => {}}
+                updateTodoTask={async (task: string) => {
+                  await axios
+                    .put(
+                      `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
+                      {
+                        id: todo.id,
+                        task: task,
+                        completed: todo.completed,
+                        createdOn: todo.createdOn,
+                        tags: todo.tags,
+                      }
+                    )
+                    .then((res) => {
+                      const todoResponse = res.data;
+                      setTodosFromResponse(todoResponse);
+                    });
+                }}
+                updateTodoCompleted={async (completed: string) => {
+                  await axios
+                    .put(
+                      `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
+                      {
+                        id: todo.id,
+                        task: todo.task,
+                        completed: completed,
+                        createdOn: todo.createdOn,
+                        tags: todo.tags,
+                      }
+                    )
+                    .then((res) => {
+                      const todoResponse = res.data;
+                      setTodosFromResponse(todoResponse);
+                    });
+                }}
                 deleteTodo={async () => {
                   await axios
                     .delete(
@@ -90,7 +107,7 @@ export default function Todos({ userid }: { userid: string }) {
           );
         })
       ) : (
-        <div>No Todos Found!</div>
+        <div>No Todos Found! Click the ADD TODO button to get started!</div>
       )}
     </div>
   );

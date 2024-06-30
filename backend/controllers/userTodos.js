@@ -41,10 +41,10 @@ const updateTodo = async (req, res) => {
   const task = req.body.task,
     tags = req.body.tags;
   let completed;
-  if (req.body.completed === "true") {
+  if (req.body.completed === "Yes") {
     completed = true;
   }
-  if (req.body.completed === "false") {
+  if (req.body.completed === "No") {
     completed = false;
   }
 
