@@ -36,9 +36,9 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
     <>
       {!toggleEdit ? (
         // Todo Box
-        <div className="flex flex-row bg-gray-400 justify-start min-w-[65vw] min-h-[5vh] max-h-[10vh]">
+        <div className="flex flex-row bg-gray-400 border-black border-2 justify-start min-w-[65vw] min-h-[5vh] max-h-[10vh]">
           {/*Task Container*/}
-          <span className="min-w-[30vw] my-auto px-3 font-mono">
+          <span className="min-w-[30vw] my-auto px-3 flex-wrap flex-grow flex-shrink">
             {completed ? (
               <span>
                 <del>
@@ -52,7 +52,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             )}
           </span>
           {/*Creation Date Container*/}
-          <span className="flex justify-center min-w-[10vw] my-auto font-mono px-5">
+          <span className="flex justify-center min-w-[10vw] my-auto px-5">
             {completed ? (
               <span>
                 <del>{createdOn}</del>
@@ -62,10 +62,10 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             )}
           </span>
           {/*Tags Container*/}
-          <span className="min-w-[10vw] flex flex-row">
+          <span className="min-w-[10vw] flex flex-row justify-center">
             {tags.map((tag) => {
               return (
-                <span className="p-1 text-xs min-h-5 text-white flex justify-center items-center">
+                <span className="p-1 text-xs min-h-5 text-white flex ">
                   {completed ? (
                     <span className="bg-black rounded-sm text-white p-1 my-auto">
                       <del>{tag}</del>
@@ -80,7 +80,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             })}
           </span>
           {/*Edit | Delete | Completed Checkbox Container*/}
-          <span className="flex flex-row gap-5 justify-center items-center min-w-[5vw] px-1">
+          <span className="flex flex-row flex-grow gap-5 justify-center items-center min-w-[5vw] px-1">
             {/*Edit Todo Button*/}
             <span
               className="hover: cursor-pointer"
