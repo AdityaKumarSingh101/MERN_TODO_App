@@ -67,11 +67,23 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
               return (
                 <span className="p-1 text-xs min-h-5 text-white flex ">
                   {completed ? (
-                    <span className="bg-black rounded-sm text-white p-1 my-auto">
+                    <span
+                      className={
+                        tag === ""
+                          ? ""
+                          : "bg-black rounded-sm text-white p-1 my-auto"
+                      }
+                    >
                       <del>{tag}</del>
                     </span>
                   ) : (
-                    <span className="bg-black rounded-sm text-white p-1 my-auto">
+                    <span
+                      className={
+                        tag === ""
+                          ? ""
+                          : "bg-black rounded-sm text-white p-1 my-auto"
+                      }
+                    >
                       {tag}
                     </span>
                   )}
