@@ -36,7 +36,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
     <>
       {!toggleEdit ? (
         // Todo Box
-        <div className="flex flex-row bg-gray-400 border-black border-2 justify-start min-w-[65vw] min-h-[5vh] max-h-[10vh]">
+        <div className="flex flex-row bg-gray-400 border-black border-2 border-t-0 justify-start min-w-[65vw] min-h-[5vh] max-h-[10vh]">
           {/*Task Container*/}
           <span className="min-w-[30vw] my-auto px-3 flex-wrap flex-grow flex-shrink">
             {completed ? (
