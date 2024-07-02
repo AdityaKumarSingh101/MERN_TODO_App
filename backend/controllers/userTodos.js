@@ -17,13 +17,13 @@ const createTodo = async (req, res) => {
 
   const task = req.body.task,
     createdOn = dayjs().format("dddd, DD MMM");
-  tags = req.body.tags;
+  tag = req.body.tag;
   await User.findByIdAndUpdate(userid, {
     $push: {
       todos: {
         task: task,
         createdOn: createdOn,
-        tags: tags,
+        tag: tag,
       },
     },
   });
@@ -39,7 +39,7 @@ const updateTodo = async (req, res) => {
   const todoid = req.params.todoid;
 
   const task = req.body.task,
-    tags = req.body.tags;
+    tag = req.body.tag;
   let completed;
   if (req.body.completed === "Yes") {
     completed = true;
@@ -54,7 +54,7 @@ const updateTodo = async (req, res) => {
       $set: {
         "todos.$.task": task,
         "todos.$.completed": completed,
-        "todos.$.tags": tags,
+        "todos.$.tag": tag,
       },
     }
   );

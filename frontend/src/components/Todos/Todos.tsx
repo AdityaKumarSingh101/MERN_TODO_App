@@ -8,7 +8,7 @@ type Todos = [
     task: string;
     completed: string;
     createdOn: string;
-    tags: [];
+    tag: string;
   }
 ];
 
@@ -21,12 +21,14 @@ export default function Todos({ userid }: { userid: string }) {
       task: "",
       completed: "",
       createdOn: "",
-      tags: [],
+      tag: "",
     },
   ]);
 
-  const [todoTag, setTodoTag] = useState<string>("");
   const [todoTask, setTodoTask] = useState<string>("");
+
+  const [todoTag, setTodoTag] = useState<string>("");
+  const todoTagOptions = ["Important", "Work", "Personal"];
 
   let [toggleAdd, setToggleAdd] = useState<boolean>(false);
 
@@ -36,7 +38,7 @@ export default function Todos({ userid }: { userid: string }) {
       task: todo.task,
       completed: todo.completed,
       createdOn: todo.createdOn,
-      tags: todo.tags,
+      tag: todo.tag,
     }));
     setTodos(newTodos);
   };
@@ -56,13 +58,14 @@ export default function Todos({ userid }: { userid: string }) {
     await axios
       .post(`http://localhost:3001/users/${userid}/todos/create`, {
         task: todoTask,
-        tags: todoTag,
+        tag: todoTag,
       })
       .then((res) => {
-        const todoResponse = res.data;
-        console.log(todoResponse);
-        setTodosFromResponse(todoResponse);
+        setTodosFromResponse(res.data);
       });
+    setToggleAdd(false);
+    setTodoTag("");
+    setTodoTask("");
   }
   return (
     <>
@@ -75,7 +78,7 @@ export default function Todos({ userid }: { userid: string }) {
                   task={todo.task}
                   createdOn={todo.createdOn}
                   completed={todo.completed}
-                  tags={todo.tags}
+                  tag={todo.tag}
                   updateTodoTask={async (task: string) => {
                     await axios
                       .put(
@@ -85,12 +88,28 @@ export default function Todos({ userid }: { userid: string }) {
                           task: task,
                           completed: todo.completed,
                           createdOn: todo.createdOn,
-                          tags: todo.tags,
+                          tag: todo.tag,
                         }
                       )
                       .then((res) => {
                         const todoResponse = res.data;
                         setTodosFromResponse(todoResponse);
+                      });
+                  }}
+                  updateTodoTag={async (tag: string) => {
+                    await axios
+                      .put(
+                        `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
+                        {
+                          id: todo.id,
+                          task: todo.task,
+                          completed: todo.completed,
+                          createdOn: todo.createdOn,
+                          tag: tag,
+                        }
+                      )
+                      .then((res) => {
+                        setTodosFromResponse(res.data);
                       });
                   }}
                   updateTodoCompleted={async (completed: string) => {
@@ -102,12 +121,11 @@ export default function Todos({ userid }: { userid: string }) {
                           task: todo.task,
                           completed: completed,
                           createdOn: todo.createdOn,
-                          tags: todo.tags,
+                          tag: todo.tag,
                         }
                       )
                       .then((res) => {
-                        const todoResponse = res.data;
-                        setTodosFromResponse(todoResponse);
+                        setTodosFromResponse(res.data);
                       });
                   }}
                   deleteTodo={async () => {
@@ -116,8 +134,7 @@ export default function Todos({ userid }: { userid: string }) {
                         `http://localhost:3001/users/${userid}/todos/delete/${todo.id}`
                       )
                       .then((res) => {
-                        const todoResponse = res.data;
-                        setTodosFromResponse(todoResponse);
+                        setTodosFromResponse(res.data);
                       });
                   }}
                 />
@@ -149,13 +166,15 @@ export default function Todos({ userid }: { userid: string }) {
               <span className="bg-gray-500 text-black h-[100%] w-[30px] ml-3 pr-10 pl-2 py-1 border-2 border-r-0 border-black align-middle">
                 <b>Tag</b>
               </span>
-              <input
-                type="text"
+              <select
                 className="border-black border-2 w-[20%] px-2 mr-3 focus: outline-none"
-                value={todoTag}
-                placeholder=""
                 onChange={(e) => setTodoTag(e.target.value)}
-              />
+              >
+                <option value="">Select...</option>
+                {todoTagOptions.map((tag, index) => {
+                  return <option key={index}>{tag}</option>;
+                })}
+              </select>
             </div>
             <button
               type="button"

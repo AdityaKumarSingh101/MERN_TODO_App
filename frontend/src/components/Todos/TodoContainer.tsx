@@ -11,9 +11,10 @@ type TodoContainerProps = {
   task: string;
   completed: string;
   createdOn: string;
-  tags: [];
+  tag: string;
   updateTodoTask: (updatedTask: string) => void;
   updateTodoCompleted: (updateCompleted: string) => void;
+  updateTodoTag: (updateTag: string) => void;
   deleteTodo: () => void;
 };
 
@@ -21,9 +22,10 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
   task,
   completed,
   createdOn,
-  tags,
+  tag,
   updateTodoTask,
   updateTodoCompleted,
+  updateTodoTag,
   deleteTodo,
 }) => {
   let [toggleEdit, setToggleEdit] = useState<boolean>(false);
@@ -31,6 +33,8 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
     completed === "Yes" ? true : false
   );
   const [editTask, setEditTask] = useState<string>(task);
+
+  const todoTagOptions = ["Important", "Work", "Personal"];
 
   return (
     <>
@@ -61,35 +65,27 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
               <span>{createdOn}</span>
             )}
           </span>
-          {/*Tags Container*/}
+          {/*Tag Container*/}
           <span className="min-w-[10vw] flex flex-row justify-center">
-            {tags.map((tag) => {
-              return (
-                <span className="p-1 text-xs min-h-5 text-white flex ">
-                  {completed ? (
-                    <span
-                      className={
-                        tag === ""
-                          ? ""
-                          : "bg-black rounded-sm text-white p-1 my-auto"
-                      }
-                    >
-                      <del>{tag}</del>
-                    </span>
-                  ) : (
-                    <span
-                      className={
-                        tag === ""
-                          ? ""
-                          : "bg-black rounded-sm text-white p-1 my-auto"
-                      }
-                    >
-                      {tag}
-                    </span>
-                  )}
+            <span className="p-1 text-xs min-h-5 text-white flex ">
+              {completed ? (
+                <span
+                  className={
+                    !tag ? "" : "bg-black rounded-sm text-white p-1 my-auto"
+                  }
+                >
+                  <del>{tag}</del>
                 </span>
-              );
-            })}
+              ) : (
+                <span
+                  className={
+                    !tag ? "" : "bg-black rounded-sm text-white p-1 my-auto"
+                  }
+                >
+                  {tag}
+                </span>
+              )}
+            </span>
           </span>
           {/*Edit | Delete | Completed Checkbox Container*/}
           <span className="flex flex-row flex-grow gap-5 justify-center items-center min-w-[5vw] px-1">
@@ -117,19 +113,29 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
           </span>
         </div>
       ) : (
-        // Update Todo Task Container
-        <div className="flex flex-row bg-gray-400 justify-between min-w-[65vw] min-h-[5vh] max-h-[10vh]">
-          {/*Update Task Field Container*/}
-          <span className="flex min-w-[50vw] justify-center items-center">
+        // Update Todo Task and Tag Container
+        <div className="flex flex-row bg-gray-400 min-w-[65vw] min-h-[5vh] max-h-[10vh] ">
+          {/*Update Task*/}
+          <span className="flex min-w-[80%] justify-start items-center ">
             <input
               type="text"
-              className="w-[95%] h-[95%] bg-transparent px-2 focus:outline-none"
+              className="w-[90%] h-[95%] bg-transparent px-2 focus:outline-none"
               value={editTask}
               onChange={(e) => setEditTask(e.target.value)}
             />
+            {/*Update Tag*/}
+            <select
+              onChange={(e) => updateTodoTag(e.target.value)}
+              className="w-[30%] h-[95%] bg-white px-2 focus:outline-none "
+            >
+              <option>Select a tag...</option>
+              {todoTagOptions.map((tag, index) => {
+                return <option key={index}>{tag}</option>;
+              })}
+            </select>
           </span>
           {/*Buttons Container*/}
-          <span className="flex flex-row gap-3 justify-center items-center px-2 min-w-[10vw]">
+          <span className="flex flex-row gap-3 items-center min-w-[20%] pl-7 ">
             {/*Submit Todo Button*/}
             <span
               className="hover:cursor-pointer"
