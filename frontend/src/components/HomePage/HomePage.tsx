@@ -1,6 +1,4 @@
 import { useState } from "react";
-
-import Button from "../../atoms/Button";
 import LoginPage from "../Login/Login";
 import SignUpPage from "../SignUp/SignUp";
 
@@ -13,22 +11,24 @@ export default function HomePage() {
     <div className="HomePage-Container">
       <div className="HeroImage-Container">
         <div className="Button-Container">
-          <Button
+          <button
             id="showLoginButton"
             className="button"
             disabled={false}
             type="button"
-            text={"Login"}
-            clickFunction={() => setDisplayLogin(true)}
-          />
-          <Button
+            onClick={() => setDisplayLogin(true)}
+          >
+            Login
+          </button>
+          <button
             id="showSignUpButton"
             className="button"
             disabled={false}
             type="button"
-            text={"SignUp"}
-            clickFunction={() => setDisplayLogin(false)}
-          />
+            onClick={() => setDisplayLogin(false)}
+          >
+            SignUp
+          </button>
         </div>
       </div>
       <div className="Button-Page-Container">
