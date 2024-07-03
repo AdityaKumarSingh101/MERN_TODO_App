@@ -9,13 +9,21 @@ import { useState } from "react";
 
 type TodoContainerProps = {
   task: string;
-  completed: string;
+  completed: boolean;
   createdOn: string;
   tag: string;
-  updateTodoTask: (updatedTask: string) => void;
-  updateTodoCompleted: (updateCompleted: string) => void;
-  updateTodoTag: (updateTag: string) => void;
+  updateTodo: (
+    updatedTask: string,
+    updatedTag: string,
+    updatedCompleted: boolean
+  ) => void;
   deleteTodo: () => void;
+};
+
+type Todo = {
+  task: string;
+  tag: string;
+  completed: boolean;
 };
 
 export const TodoContainer: React.FC<TodoContainerProps> = ({
@@ -23,16 +31,16 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
   completed,
   createdOn,
   tag,
-  updateTodoTask,
-  updateTodoCompleted,
-  updateTodoTag,
+  updateTodo,
   deleteTodo,
 }) => {
   let [toggleEdit, setToggleEdit] = useState<boolean>(false);
-  const [todoCompleted, setTodoCompleted] = useState(
-    completed === "Yes" ? true : false
-  );
-  const [editTask, setEditTask] = useState<string>(task);
+
+  const [newTodo, setNewTodo] = useState<Todo>({
+    task: task,
+    tag: tag,
+    completed: completed,
+  });
 
   const todoTagOptions = ["Important", "Work", "Personal"];
 
@@ -65,7 +73,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
               <span>{createdOn}</span>
             )}
           </span>
-          {/*Tag Container*/}
+          {/*Tags Container*/}
           <span className="min-w-[10vw] flex flex-row justify-center">
             <span className="p-1 text-xs min-h-5 text-white flex ">
               {completed ? (
@@ -103,9 +111,9 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             {/*Completed Check Mark*/}
             <span
               className="hover: cursor-pointer"
-              onClick={async () => {
-                setTodoCompleted(!todoCompleted);
-                updateTodoCompleted(todoCompleted ? "Yes" : "No");
+              onClick={() => {
+                setNewTodo({ ...newTodo, completed: !completed });
+                updateTodo(task, tag, newTodo.completed);
               }}
             >
               <BsClipboard2CheckFill />
@@ -114,18 +122,18 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
         </div>
       ) : (
         // Update Todo Task and Tag Container
-        <div className="flex flex-row bg-gray-400 min-w-[65vw] min-h-[5vh] max-h-[10vh] ">
+        <div className="flex flex-row bg-gray-400 min-w-[65vw] min-h-[5vh] max-h-[10vh] border-black border-2 border-t-0">
           {/*Update Task*/}
           <span className="flex min-w-[80%] justify-start items-center ">
             <input
               type="text"
               className="w-[90%] h-[95%] bg-transparent px-2 focus:outline-none"
-              value={editTask}
-              onChange={(e) => setEditTask(e.target.value)}
+              value={newTodo.task}
+              onChange={(e) => setNewTodo({ ...newTodo, task: e.target.value })}
             />
             {/*Update Tag*/}
             <select
-              onChange={(e) => updateTodoTag(e.target.value)}
+              onChange={(e) => setNewTodo({ ...newTodo, tag: e.target.value })}
               className="w-[30%] h-[95%] bg-white px-2 focus:outline-none "
             >
               <option>Select a tag...</option>
@@ -140,7 +148,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             <span
               className="hover:cursor-pointer"
               onClick={async () => {
-                updateTodoTask(editTask);
+                updateTodo(newTodo.task, newTodo.tag, newTodo.completed);
                 setToggleEdit(false);
               }}
             >

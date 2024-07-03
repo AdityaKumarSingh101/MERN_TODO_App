@@ -15,9 +15,20 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  const errorStyle = {
+    backgroundColor: "red",
+    color: "white",
+    border: "2px",
+    borderRadius: "0px 0px 5px 5px",
+    padding: "1px 2px",
+  };
+
+  const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
+
   const {
     register,
     formState: { errors },
+    handleSubmit,
   } = useForm<IFormInput>({
     defaultValues: {
       username: "",
@@ -25,7 +36,7 @@ export default function LoginPage() {
     },
   });
 
-  async function handleSubmit() {
+  async function onSubmit() {
     await axios.post(loginURL, { username, password }).then((res) => {
       if (res.data === "Please enter username / password!") {
         alert(res.data);
@@ -48,40 +59,49 @@ export default function LoginPage() {
   }
   return (
     <div className="w-80 min-h-10">
-      <h1 className="text-center font-sans text-[--text-color] pb-20 font-bold text-3xl">
+      <h1 className="text-center font-mono text-black pb-20 font-bold text-3xl">
         Login <br />
         to your account...
       </h1>
-      <form>
-        <div className="flex flex-col gap-3">
-          <input
-            type="text"
-            id="username"
-            className="h-10 p-1 border-[--border-color] border-solid border-2 rounded-md"
-            placeholder="Username"
-            {...register("username", { required: "This field is required!" })}
-            value={username}
-            onChange={(e) => {
-              setUsername(e.target.value);
-            }}
-          />
-          <p>{errors.username?.message}</p>
-          <input
-            type="password"
-            id="password"
-            className="h-10 p-1 border-[--border-color] border-solid border-2 rounded-md"
-            placeholder="Password"
-            {...register("password", { required: "This field is required!" })}
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <p>{errors.password?.message}</p>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="flex flex-col gap-3 text-center">
+          <div className="flex flex-col">
+            <input
+              type="text"
+              className={inputFieldStyle}
+              placeholder="Username"
+              {...register("username", { required: "This field is required!" })}
+              value={username}
+              onChange={(e) => {
+                setUsername(e.target.value);
+              }}
+            />
+            {errors.username?.message ? (
+              <span style={errorStyle}>{errors.username.message}</span>
+            ) : (
+              <span></span>
+            )}
+          </div>
+          <div className="flex flex-col">
+            <input
+              type="password"
+              className={inputFieldStyle}
+              placeholder="Password"
+              {...register("password", { required: "This field is required!" })}
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+            />
+            {errors.password?.message ? (
+              <span style={errorStyle}>{errors.password.message}</span>
+            ) : (
+              <span></span>
+            )}
+          </div>
           <button
-            type="button"
-            className="border-2 rounded-md border-[--border-color] text-[--text-color] font-serif font-normal text-lg h-12 hover:bg-[--border-color] hover:text-white"
-            onClick={handleSubmit}
+            type="submit"
+            className="border-black border-2 text-black font-mono font-normal text-lg h-12 hover:bg-black hover:text-white mt-5"
           >
             Login
           </button>

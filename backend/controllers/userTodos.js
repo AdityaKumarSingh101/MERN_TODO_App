@@ -15,6 +15,9 @@ const getAllTodos = async (req, res) => {
 const createTodo = async (req, res) => {
   const userid = req.params.userid;
 
+  if (req.body.task === "" || req.body.tag === "" || req.body.completed === "")
+    return;
+
   const task = req.body.task,
     createdOn = dayjs().format("dddd, DD MMM");
   tag = req.body.tag;

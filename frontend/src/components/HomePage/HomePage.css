@@ -2,54 +2,14 @@
   width: 20vw;
   height: 10vh;
   border: 2px solid white;
-  border-radius: 5px;
   background-color: transparent;
   color: white;
+  font-family: monospace;
+  font-size: x-large;
 }
 
 .button:hover {
   cursor: pointer;
   background-color: white;
-  color: rgb(88, 88, 204);
-}
-
-.HomePage-Container {
-  display: flex;
-  flex-direction: row;
-}
-
-.HeroImage-Container {
-  width: 60%;
-  min-height: 100vh;
-  background-color: rgb(88, 88, 204);
-  margin-right: 20px;
-  padding: 0;
-  transition: width 0.5s;
-}
-.HeroImage-Container:hover {
-  width: 80%;
-}
-
-.Button-Container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  gap: 20px;
-  margin: 70vh auto 30vh auto;
-}
-
-.Button-Page-Container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 100%;
-  width: 40%;
-  margin: auto;
-}
-
-.LoginSignUp-Container {
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-  margin: 10px auto;
+  color: black;
 }

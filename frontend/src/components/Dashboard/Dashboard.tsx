@@ -73,7 +73,7 @@ export default function Dashboard() {
         </h1>
         <button
           id="logoutBtn"
-          className="w-16 h-10 border-[--border-color] border-2 rounded-md text-[--text-color] font-serif font-normal text-md mr-3 hover:bg-[--border-color] hover:text-white"
+          className="w-20 h-10 border-white border-2 text-white font-serif font-normal text-md mr-10 hover:bg-white hover:text-black"
           onClick={handleLogout}
         >
           Logout

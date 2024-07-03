@@ -2,36 +2,35 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { TodoContainer } from "./TodoContainer";
 
-type Todos = [
-  {
-    id: string;
-    task: string;
-    completed: string;
-    createdOn: string;
-    tag: string;
-  }
-];
+type Todo = {
+  id: string;
+  task: string;
+  completed: boolean;
+  createdOn: string;
+  tag: string;
+};
 
 export default function Todos({ userid }: { userid: string }) {
+  // API Endpoints
   const fetchTodoDataURL = `http://localhost:3001/users/${userid}/todos`;
+  const addTodoURL = `http://localhost:3001/users/${userid}/todos/create`;
+  const updateTodoURL = `http://localhost:3001/users/${userid}/todos/update/`;
+  const deleteTodoURL = `http://localhost:3001/users/${userid}/todos/delete/`;
 
-  const [todos, setTodos] = useState<Todos>([
-    {
-      id: "",
-      task: "",
-      completed: "",
-      createdOn: "",
-      tag: "",
-    },
-  ]);
+  const [todo, setTodo] = useState<Todo>({
+    id: "",
+    task: "",
+    createdOn: "",
+    completed: false,
+    tag: "",
+  });
+  const [todos, setTodos] = useState<Todo[]>([todo]);
 
-  const [todoTask, setTodoTask] = useState<string>("");
-
-  const [todoTag, setTodoTag] = useState<string>("");
   const todoTagOptions = ["Important", "Work", "Personal"];
 
   let [toggleAdd, setToggleAdd] = useState<boolean>(false);
 
+  // Resposnse returns an array of todos, and this function maps the response to each todo object, then updates the state
   const setTodosFromResponse = (todoResponse: any) => {
     const newTodos = todoResponse.map((todo: any) => ({
       id: todo._id,
@@ -45,8 +44,7 @@ export default function Todos({ userid }: { userid: string }) {
 
   async function fetchAllTodos() {
     await axios.get(fetchTodoDataURL).then((res) => {
-      const todoResponse = res.data;
-      setTodosFromResponse(todoResponse);
+      setTodosFromResponse(res.data);
     });
   }
 
@@ -54,19 +52,18 @@ export default function Todos({ userid }: { userid: string }) {
     fetchAllTodos();
   }, []);
 
-  async function AddTodo() {
+  const AddTodo = async () => {
     await axios
-      .post(`http://localhost:3001/users/${userid}/todos/create`, {
-        task: todoTask,
-        tag: todoTag,
+      .post(addTodoURL, {
+        task: todo.task,
+        tag: todo.tag,
       })
       .then((res) => {
         setTodosFromResponse(res.data);
       });
     setToggleAdd(false);
-    setTodoTag("");
-    setTodoTask("");
-  }
+  };
+
   return (
     <>
       <div>
@@ -79,60 +76,25 @@ export default function Todos({ userid }: { userid: string }) {
                   createdOn={todo.createdOn}
                   completed={todo.completed}
                   tag={todo.tag}
-                  updateTodoTask={async (task: string) => {
+                  updateTodo={async function UpdateTodo(
+                    task: string,
+                    tag: string,
+                    completed: boolean
+                  ) {
                     await axios
-                      .put(
-                        `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
-                        {
-                          id: todo.id,
-                          task: task,
-                          completed: todo.completed,
-                          createdOn: todo.createdOn,
-                          tag: todo.tag,
-                        }
-                      )
-                      .then((res) => {
-                        const todoResponse = res.data;
-                        setTodosFromResponse(todoResponse);
-                      });
-                  }}
-                  updateTodoTag={async (tag: string) => {
-                    await axios
-                      .put(
-                        `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
-                        {
-                          id: todo.id,
-                          task: todo.task,
-                          completed: todo.completed,
-                          createdOn: todo.createdOn,
-                          tag: tag,
-                        }
-                      )
+                      .put(`${updateTodoURL}${todo.id}`, {
+                        ...todo,
+                        task: task,
+                        tag: tag,
+                        completed: completed ? "Yes" : "No",
+                      })
                       .then((res) => {
                         setTodosFromResponse(res.data);
                       });
                   }}
-                  updateTodoCompleted={async (completed: string) => {
+                  deleteTodo={async function DeleteTodo() {
                     await axios
-                      .put(
-                        `http://localhost:3001/users/${userid}/todos/update/${todo.id}`,
-                        {
-                          id: todo.id,
-                          task: todo.task,
-                          completed: completed,
-                          createdOn: todo.createdOn,
-                          tag: todo.tag,
-                        }
-                      )
-                      .then((res) => {
-                        setTodosFromResponse(res.data);
-                      });
-                  }}
-                  deleteTodo={async () => {
-                    await axios
-                      .delete(
-                        `http://localhost:3001/users/${userid}/todos/delete/${todo.id}`
-                      )
+                      .delete(`${deleteTodoURL}${todo.id}`)
                       .then((res) => {
                         setTodosFromResponse(res.data);
                       });
@@ -154,21 +116,23 @@ export default function Todos({ userid }: { userid: string }) {
           <div className="flex flex-row gap-2 w-[100%]">
             {/*Task and Tag*/}
             <div className="flex flex-grow">
+              {/*Task*/}
               <span className="bg-gray-500 text-black h-[100%] w-[30px] pr-10 pl-1 py-1 border-2 border-r-0 border-black align-middle">
                 <b>Task</b>
               </span>
               <input
                 type="text"
                 className="border-black border-2 w-[80%] px-2 focus:outline-none"
-                value={todoTask}
-                onChange={(e) => setTodoTask(e.target.value)}
+                value={todo.task}
+                onChange={(e) => setTodo({ ...todo, task: e.target.value })}
               />
+              {/*Tag*/}
               <span className="bg-gray-500 text-black h-[100%] w-[30px] ml-3 pr-10 pl-2 py-1 border-2 border-r-0 border-black align-middle">
                 <b>Tag</b>
               </span>
               <select
                 className="border-black border-2 w-[20%] px-2 mr-3 focus: outline-none"
-                onChange={(e) => setTodoTag(e.target.value)}
+                onChange={(e) => setTodo({ ...todo, tag: e.target.value })}
               >
                 <option value="">Select...</option>
                 {todoTagOptions.map((tag, index) => {
@@ -176,6 +140,7 @@ export default function Todos({ userid }: { userid: string }) {
                 })}
               </select>
             </div>
+            {/*Add Todo Button*/}
             <button
               type="button"
               className="border-black border-2 bg-black text-white px-3"
@@ -183,6 +148,7 @@ export default function Todos({ userid }: { userid: string }) {
             >
               Add
             </button>
+            {/*Cancel Button*/}
             <button
               className="border-black border-2 bg-black text-white px-3"
               onClick={() => setToggleAdd(false)}
