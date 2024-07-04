@@ -12,11 +12,7 @@ type TodoContainerProps = {
   completed: boolean;
   createdOn: string;
   tag: string;
-  updateTodo: (
-    updatedTask: string,
-    updatedTag: string,
-    updatedCompleted: boolean
-  ) => void;
+  updateTodo: (updatedTodo: Todo) => void;
   deleteTodo: () => void;
 };
 
@@ -26,31 +22,33 @@ type Todo = {
   completed: boolean;
 };
 
-export const TodoContainer: React.FC<TodoContainerProps> = ({
+export const TodoContainer = ({
   task,
   completed,
   createdOn,
   tag,
   updateTodo,
   deleteTodo,
-}) => {
+}: TodoContainerProps) => {
   let [toggleEdit, setToggleEdit] = useState<boolean>(false);
 
-  const [newTodo, setNewTodo] = useState<Todo>({
+  // Used to store the state of the todo being updated,
+  const [updatedTodo, setUpdatedTodo] = useState<Todo>({
     task: task,
     tag: tag,
     completed: completed,
   });
 
+  // Tag Options List
   const todoTagOptions = ["Important", "Work", "Personal"];
 
   return (
     <>
       {!toggleEdit ? (
         // Todo Box
-        <div className="flex flex-row bg-gray-400 border-black border-2 border-t-0 justify-start min-w-[65vw] min-h-[5vh] max-h-[10vh]">
+        <div className="flex flex-row bg-gray-400 border-black border-2 border-t-0 justify-start min-w-[65vw] min-h-[5vh] max-h-[20vh]">
           {/*Task Container*/}
-          <span className="min-w-[30vw] my-auto px-3 flex-wrap flex-grow flex-shrink">
+          <span className="w-[30vw] my-auto px-3 flex-wrap flex-grow flex-shrink">
             {completed ? (
               <span>
                 <del>
@@ -64,7 +62,7 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             )}
           </span>
           {/*Creation Date Container*/}
-          <span className="flex justify-center min-w-[10vw] my-auto px-5">
+          <span className="flex justify-start min-w-[15vw] my-auto flex-wrap">
             {completed ? (
               <span>
                 <del>{createdOn}</del>
@@ -74,8 +72,8 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             )}
           </span>
           {/*Tags Container*/}
-          <span className="min-w-[10vw] flex flex-row justify-center">
-            <span className="p-1 text-xs min-h-5 text-white flex ">
+          <span className="min-w-[10vw] flex flex-row justify-start">
+            <span className="p-1 text-xs min-h-5 text-white flex">
               {completed ? (
                 <span
                   className={
@@ -112,8 +110,8 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             <span
               className="hover: cursor-pointer"
               onClick={() => {
-                setNewTodo({ ...newTodo, completed: !completed });
-                updateTodo(task, tag, newTodo.completed);
+                setUpdatedTodo({ ...updatedTodo, completed: !completed });
+                updateTodo(updatedTodo);
               }}
             >
               <BsClipboard2CheckFill />
@@ -128,12 +126,16 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
             <input
               type="text"
               className="w-[90%] h-[95%] bg-transparent px-2 focus:outline-none"
-              value={newTodo.task}
-              onChange={(e) => setNewTodo({ ...newTodo, task: e.target.value })}
+              value={updatedTodo.task}
+              onChange={(e) =>
+                setUpdatedTodo({ ...updatedTodo, task: e.target.value })
+              }
             />
             {/*Update Tag*/}
             <select
-              onChange={(e) => setNewTodo({ ...newTodo, tag: e.target.value })}
+              onChange={(e) =>
+                setUpdatedTodo({ ...updatedTodo, tag: e.target.value })
+              }
               className="w-[30%] h-[95%] bg-white px-2 focus:outline-none "
             >
               <option>Select a tag...</option>
@@ -144,11 +146,11 @@ export const TodoContainer: React.FC<TodoContainerProps> = ({
           </span>
           {/*Buttons Container*/}
           <span className="flex flex-row gap-3 items-center min-w-[20%] pl-7 ">
-            {/*Submit Todo Button*/}
+            {/*Submit Updated Todo Button*/}
             <span
               className="hover:cursor-pointer"
               onClick={async () => {
-                updateTodo(newTodo.task, newTodo.tag, newTodo.completed);
+                updateTodo(updatedTodo);
                 setToggleEdit(false);
               }}
             >

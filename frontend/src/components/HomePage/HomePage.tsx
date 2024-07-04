@@ -1,8 +1,7 @@
 import { useState } from "react";
 import LoginPage from "../Login/Login";
 import SignUpPage from "../SignUp/SignUp";
-
-import "./HomePage.css";
+import { HomePageButton } from "../atoms/Buttons";
 
 export default function HomePage() {
   let [displayLogin, setDisplayLogin] = useState(true);
@@ -17,26 +16,16 @@ export default function HomePage() {
           </div>
         </div>
         <div className="flex flex-row justify-center items-start gap-5">
-          <button
-            className="button"
-            type="button"
-            onClick={() => setDisplayLogin(true)}
-          >
-            Login
-          </button>
-          <button
-            className="button"
-            type="button"
+          <HomePageButton type="Login" onClick={() => setDisplayLogin(true)} />
+          <HomePageButton
+            type="SignUp"
             onClick={() => setDisplayLogin(false)}
-          >
-            SignUp
-          </button>
+          />
         </div>
       </div>
       <div className="flex flex-col items-center m-auto">
         <div className="justify-center mr-5">
-          {displayLogin && <LoginPage />}
-          {!displayLogin && <SignUpPage />}
+          {displayLogin ? <LoginPage /> : <SignUpPage />}
         </div>
       </div>
     </div>

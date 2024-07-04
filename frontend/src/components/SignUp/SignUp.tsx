@@ -2,7 +2,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { SubmitButton } from "../atoms/Buttons";
 
+type FormInputs = {
+  firstname: "";
+  lastname: "";
+  username: "";
+  email: "";
+  password: "";
+  confirmPassword: "";
+};
 export default function SignUpPage() {
   const signUpURL = "http://localhost:3001/SignUp";
   const navigate = useNavigate();
@@ -32,9 +41,8 @@ export default function SignUpPage() {
   });
 
   const watchPasswords = watch(["password", "confirmPassword"]);
-  const watchUsername = watch("username");
 
-  const [inputs, setInputs] = useState({
+  const [inputs, setInputs] = useState<FormInputs>({
     firstname: "",
     lastname: "",
     username: "",
@@ -45,10 +53,10 @@ export default function SignUpPage() {
 
   function handleFormFields(e: any) {
     const { name, value } = e.target;
-    setInputs((values: any) => ({ ...values, [name]: value }));
+    setInputs((values: FormInputs) => ({ ...values, [name]: value }));
   }
 
-  async function handleFormSubmit() {
+  async function onSubmit() {
     await axios
       .post(signUpURL, {
         firstname: inputs.firstname,
@@ -60,10 +68,8 @@ export default function SignUpPage() {
       .then((res) => {
         if (res.data === "User Registration Successful!") {
           navigate("/");
-        } else if (res.data === "Passwords dont match!") {
-          alert("Passwords dont match!");
         } else {
-          alert("Server Error!");
+          return;
         }
       });
   }
@@ -75,10 +81,7 @@ export default function SignUpPage() {
         Sign Up <br /> to get started!
       </h1>
       {/*Main Form*/}
-      <form
-        onSubmit={handleSubmit(handleFormSubmit)}
-        className="flex flex-col gap-2"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         {/*First and Last Name*/}
         <div className="flex flex-row justify-center gap-2">
           {/* First Name */}
@@ -121,15 +124,9 @@ export default function SignUpPage() {
                 min: 2,
                 max: 10,
                 validate: (value) => {
-                  // Check if value is empty
-                  return value === ""
+                  // Check if value length in range
+                  return value !== "" && value.length >= 2 && value.length <= 10
                     ? false
-                    : // Check if value in range
-                    value.length <= 10 && value.length >= 2
-                    ? // Check if value is a valid string
-                      value.match(`/\w{2, 10}/g`)
-                      ? false
-                      : "Enter a valid name!"
                     : "Must be 2 to 10 characters!";
                 },
               })}
@@ -249,12 +246,7 @@ export default function SignUpPage() {
             )}
           </div>
           {/* Submit Button */}
-          <button
-            type="submit"
-            className="h-12 border-black border-2 text-black font-mono font-normal text-lg hover:bg-black hover:text-white mt-5"
-          >
-            Sign Up!
-          </button>
+          <SubmitButton type="SignUp" />
         </div>
       </form>
     </div>

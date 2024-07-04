@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { useForm } from "react-hook-form";
+import { SubmitButton } from "../atoms/Buttons";
 
 interface IFormInput {
   username: string;
@@ -99,12 +100,7 @@ export default function LoginPage() {
               <span></span>
             )}
           </div>
-          <button
-            type="submit"
-            className="border-black border-2 text-black font-mono font-normal text-lg h-12 hover:bg-black hover:text-white mt-5"
-          >
-            Login
-          </button>
+          <SubmitButton type="Login" />
         </div>
       </form>
     </div>
