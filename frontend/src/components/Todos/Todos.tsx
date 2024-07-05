@@ -4,8 +4,7 @@ import { TodoContainer } from "./TodoContainer";
 import TodoTableHeader from "./TodoTableHeader";
 import AddTodoForm from "./AddTodoForm";
 import { DashboardButton } from "../atoms/Buttons";
-
-import "./loading-spinner.css";
+import Loading from "../atoms/Loading";
 
 type Todo = {
   _id: string;
@@ -80,7 +79,6 @@ export default function Todos({ userid }: { userid: string }) {
 
   // Fetch all todos from backend
   async function fetchAllTodos() {
-    // Adding artificial delay to test loading state
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -115,11 +113,12 @@ export default function Todos({ userid }: { userid: string }) {
 
   return (
     <>
-      <div>
-        {/* Todo List and Search Container */}
-        <div className="mx-auto">
-          {/* Search Container */}
-          {!isLoading ? (
+      {/* Disables all elements of the TODO UI until data loads */}
+      {!isLoading ? (
+        <div>
+          {/* Todo List and Search Container */}
+          <div className="mx-auto">
+            {/* Search Container */}
             <div className="mb-2">
               {/* Search selection filter */}
               <select
@@ -142,13 +141,9 @@ export default function Todos({ userid }: { userid: string }) {
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </div>
-          ) : (
-            <span></span>
-          )}
-          <TodoTableHeader />
-          {/* Todo List */}
-          {!isLoading ? (
-            todos ? (
+            <TodoTableHeader />
+            {/* Todo List */}
+            {todos ? (
               todos
                 .filter((todo) => {
                   // Filter function for searching todos by search type
@@ -228,46 +223,37 @@ export default function Todos({ userid }: { userid: string }) {
               <span>
                 No Todos Found. Click the Add todos button to get started!
               </span>
-            )
-          ) : (
-            // Loading State display
-            <div className="flex flex-row font-mono font-bold border-black border-2 justify-center items-center">
-              {/* Loading spinner container */}
-              <span className="pt-2 mr-2">
-                <div id="loading-spinner">
-                  <div></div>
-                  <div></div>
-                  <div></div>
-                </div>
-              </span>
-              Loading Todos.... Please wait
-            </div>
-          )}
-        </div>
-        {/*Add TODO Container*/}
-        <div className="my-2 w-[100%] py-1">
-          {toggleAdd ? (
-            // ADD TODO Form
-            <AddTodoForm
-              TodoTagOptions={todoTagOptions}
-              Todo={todo}
-              SetTodo={setTodo}
-              AddTodo={AddTodo}
-              CancelAddTodo={CancelButtonClicked}
-            />
-          ) : !isLoading ? (
-            // ADD TODO Toggle Button
-            <div>
-              <DashboardButton
-                type="AddTodoToggle"
-                onClick={() => setToggleAdd(true)}
+            )}
+          </div>
+          {/*Add TODO Container 
+          - Shows the form when the add button is clicked and 
+            hides it when add or cancel button is clicked*/}
+          <div className="my-2 w-[100%] py-1">
+            {toggleAdd ? (
+              // ADD TODO Form
+              <AddTodoForm
+                TodoTagOptions={todoTagOptions}
+                Todo={todo}
+                SetTodo={setTodo}
+                AddTodo={AddTodo}
+                CancelAddTodo={CancelButtonClicked}
               />
-            </div>
-          ) : (
-            <span></span>
-          )}
+            ) : (
+              // ADD TODO Toggle Button
+              <div>
+                <DashboardButton
+                  type="AddTodoToggle"
+                  onClick={() => setToggleAdd(true)}
+                />
+              </div>
+            )}
+          </div>
         </div>
-      </div>
+      ) : (
+        <span>
+          <Loading />
+        </span>
+      )}
     </>
   );
 }
