@@ -4,6 +4,7 @@ import SignUpPage from "../SignUp/SignUp";
 import { HomePageButton } from "../atoms/Buttons";
 
 export default function HomePage() {
+  // Boolean to switch between signup and login
   const [displayLogin, setDisplayLogin] = useState(true);
 
   return (

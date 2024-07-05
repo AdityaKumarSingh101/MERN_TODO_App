@@ -19,6 +19,7 @@ export default function SignUpPage() {
 
   const errorStyle =
     "flex flex-row gap-2 bg-red-500 border-red-500 border-2 rounded-b-md text-white justify-center items-center py-0.5 mb-2";
+
   const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
 
   const {
@@ -38,6 +39,7 @@ export default function SignUpPage() {
     mode: "onChange",
   });
 
+  // Form state data
   const [inputs, setInputs] = useState<FormInputs>({
     firstname: "",
     lastname: "",
@@ -49,6 +51,7 @@ export default function SignUpPage() {
 
   const watchPasswordFields = watch(["password", "confirmPassword"]);
 
+  // Given as a callback to handleSubmit fuc=nction, runs after react-hook-form validates the form data
   const onSubmit: SubmitHandler<FormInputs> = async (inputs) => {
     await axios
       .post(signUpURL, {
