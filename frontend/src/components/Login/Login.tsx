@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 import { useForm } from "react-hook-form";
+import { BsExclamationTriangle } from "react-icons/bs";
 import { SubmitButton } from "../atoms/Buttons";
 
 interface IFormInput {
@@ -16,16 +17,6 @@ export default function LoginPage() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const errorStyle = {
-    backgroundColor: "red",
-    color: "white",
-    border: "2px",
-    borderRadius: "0px 0px 5px 5px",
-    padding: "1px 2px",
-  };
-
-  const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
-
   const {
     register,
     formState: { errors },
@@ -37,21 +28,30 @@ export default function LoginPage() {
     },
   });
 
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+
+  const errorStyle =
+    "flex flex-row justify-center items-center bg-red-500 text-white rounded-b-md py-1";
+  const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
+
   async function onSubmit() {
     await axios.post(loginURL, { username, password }).then((res) => {
       if (res.data === "Please enter username / password!") {
-        alert(res.data);
-        return;
-      } else if (res.data === "Please enter username / password!") {
-        alert(res.data);
+        setError(true);
+        setErrorMessage(res.data);
         return;
       } else if (res.data === "User not found!") {
-        alert(res.data);
+        setError(true);
+        setErrorMessage(res.data);
         return;
       } else if (res.data === "Username / Password Incorrect!") {
-        alert(res.data);
+        setError(true);
+        setErrorMessage(res.data);
         return;
       } else {
+        setError(false);
+        setErrorMessage("");
         if (!localStorage.getItem("UserId"))
           localStorage.setItem("UserId", res.data.id);
         navigate("/Dashboard");
@@ -59,14 +59,31 @@ export default function LoginPage() {
     });
   }
   return (
+    // Login Page Container
     <div className="w-80 min-h-10">
+      {/* Login Text */}
       <h1 className="text-center font-mono text-black pb-20 font-bold text-3xl">
         Login <br />
         to your account...
       </h1>
+      {/* Error Box */}
+      <div>
+        {error ? (
+          <div className="flex flex-row justify-center items-center mx-auto bg-red-600 gap-5 text-white py-3 mb-5">
+            <BsExclamationTriangle size={25} />
+            {errorMessage}
+          </div>
+        ) : (
+          <></>
+        )}
+      </div>
+      {/* Login Form */}
       <form onSubmit={handleSubmit(onSubmit)}>
+        {/* Form Container */}
         <div className="flex flex-col gap-3 text-center">
+          {/* Username Field and Error Message Container */}
           <div className="flex flex-col">
+            {/* Username Field */}
             <input
               type="text"
               className={inputFieldStyle}
@@ -77,13 +94,19 @@ export default function LoginPage() {
                 setUsername(e.target.value);
               }}
             />
+            {/* Error Message */}
             {errors.username?.message ? (
-              <span style={errorStyle}>{errors.username.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.username.message}
+              </span>
             ) : (
               <span></span>
             )}
           </div>
+          {/* Password Field and Error Message Container */}
           <div className="flex flex-col">
+            {/* Password Field */}
             <input
               type="password"
               className={inputFieldStyle}
@@ -94,8 +117,12 @@ export default function LoginPage() {
                 setPassword(e.target.value);
               }}
             />
+            {/* Error Message */}
             {errors.password?.message ? (
-              <span style={errorStyle}>{errors.password.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.password.message}
+              </span>
             ) : (
               <span></span>
             )}

@@ -37,6 +37,9 @@ export default function Todos({ userid }: { userid: string }) {
 
   const todoTagOptions: string[] = ["Important", "Work", "Personal"];
 
+  const [searchText, setSearchText] = useState<string>("");
+  const [searchBy, setSearchBy] = useState<string>("");
+
   // Toggle showing the add todo form
   let [toggleAdd, setToggleAdd] = useState<boolean>(false);
 
@@ -93,44 +96,79 @@ export default function Todos({ userid }: { userid: string }) {
   return (
     <>
       <div>
+        {/* Todo List and Search Container */}
         <div className="mx-auto">
+          {/* Search Container */}
+          <div className="mb-2">
+            <select
+              className="w-[20%] p-[8.5px] border-black border-2 border-r-0 bg-gray-400 focus:outline-none focus:bg-white select:selected:bg-blue-500"
+              onChange={(e) => setSearchBy(e.target.value)}
+            >
+              <option value="">
+                <b>Select</b>
+              </option>
+              <option value="task">Task</option>
+              <option value="tag">Tag</option>
+            </select>
+            <input
+              type="text"
+              className="w-[80%] p-2 border-black border-2 bg-gray-400 text-black focus:outline-none focus:bg-white"
+              placeholder="Search..."
+              onChange={(e) => setSearchText(e.target.value)}
+            />
+          </div>
           <TodoTableHeader />
+          {/* Todo List */}
           {todos ? (
-            todos.map((todo) => {
-              return (
-                <div key={todo._id}>
-                  <TodoContainer
-                    task={todo.task}
-                    createdOn={todo.createdOn}
-                    completed={todo.completed}
-                    tag={todo.tag}
-                    updateTodo={async function UpdateTodo(
-                      updatedTodo: UpdatedTodo
-                    ) {
-                      await axios
-                        .put(`${updateTodoURL}${todo._id}`, {
-                          ...todo,
-                          task: updatedTodo.task,
-                          tag: updatedTodo.tag,
-                          completed: updatedTodo.completed ? "Yes" : "No",
-                        })
-                        .then((res) => {
-                          setTodosFromResponse(res.data);
-                        })
-                        .catch((err) => console.log(err));
-                    }}
-                    deleteTodo={async function DeleteTodo() {
-                      await axios
-                        .delete(`${deleteTodoURL}${todo._id}`)
-                        .then((res) => {
-                          setTodosFromResponse(res.data);
-                        })
-                        .catch((err) => console.log(err));
-                    }}
-                  />
-                </div>
-              );
-            })
+            todos
+              .filter((todo) => {
+                if (searchBy === "task") {
+                  return searchText
+                    ? todo.task.toLowerCase().includes(searchText.toLowerCase())
+                    : true;
+                } else if (searchBy === "tag") {
+                  return searchText
+                    ? todo.tag.toLowerCase().includes(searchText.toLowerCase())
+                    : true;
+                } else {
+                  return true;
+                }
+              })
+              .map((todo) => {
+                return (
+                  <div key={todo._id}>
+                    <TodoContainer
+                      task={todo.task}
+                      createdOn={todo.createdOn}
+                      completed={todo.completed}
+                      tag={todo.tag}
+                      updateTodo={async function UpdateTodo(
+                        updatedTodo: UpdatedTodo
+                      ) {
+                        await axios
+                          .put(`${updateTodoURL}${todo._id}`, {
+                            ...todo,
+                            task: updatedTodo.task,
+                            tag: updatedTodo.tag,
+                            completed: updatedTodo.completed ? "Yes" : "No",
+                          })
+                          .then((res) => {
+                            setTodosFromResponse(res.data);
+                          })
+                          .catch((err) => console.log(err));
+                      }}
+                      deleteTodo={async function DeleteTodo() {
+                        await axios
+                          .delete(`${deleteTodoURL}${todo._id}`)
+                          .then((res) => {
+                            setTodosFromResponse(res.data);
+                          })
+                          .catch((err) => console.log(err));
+                      }}
+                    />
+                  </div>
+                );
+              })
           ) : (
             <div>No Todos Found! Click the ADD TODO button to get started!</div>
           )}

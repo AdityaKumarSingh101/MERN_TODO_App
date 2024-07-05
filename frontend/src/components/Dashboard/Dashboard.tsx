@@ -69,16 +69,19 @@ export default function Dashboard() {
     <div className="flex flex-col">
       {/*Contains the Dashboard NavBar */}
       <div className="flex flex-row justify-between p-1 bg-black text-white">
-        <h1 className="mt-1 ml-3 font-sans text-lg">
+        <h1 className="mt-1 ml-3 font-mono font-bold text-lg">
           Hello, {userData.username}
         </h1>
+
         <DashboardButton type="Logout" onClick={handleLogout} />
       </div>
       {/*Contains the rest of dashboard*/}
       <div className="flex flex-row">
         {/*Contains the Todo List*/}
-        <div className="mx-auto my-10">
-          <Todos userid={userId as string} />
+        <div className="  flex flex-col mx-auto my-10">
+          <div className="mt-10">
+            <Todos userid={userId as string} />
+          </div>
         </div>
       </div>
     </div>

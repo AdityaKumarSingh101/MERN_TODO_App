@@ -1,33 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { BsExclamationTriangle } from "react-icons/bs";
 import { SubmitButton } from "../atoms/Buttons";
 
 type FormInputs = {
-  firstname: "";
-  lastname: "";
-  username: "";
-  email: "";
-  password: "";
-  confirmPassword: "";
+  firstname: string;
+  lastname: string;
+  username: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
 };
 export default function SignUpPage() {
   const signUpURL = "http://localhost:3001/SignUp";
   const navigate = useNavigate();
 
-  const errorStyle = {
-    color: "red",
-    fontWeight: "bold",
-  };
-
+  const errorStyle =
+    "flex flex-row gap-2 bg-red-500 border-red-500 border-2 rounded-b-md text-white justify-center items-center py-0.5 mb-2";
   const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
 
   const {
     register,
+    watch,
     formState: { errors },
     handleSubmit,
-    watch,
   } = useForm({
     defaultValues: {
       firstname: "",
@@ -40,8 +38,6 @@ export default function SignUpPage() {
     mode: "onChange",
   });
 
-  const watchPasswords = watch(["password", "confirmPassword"]);
-
   const [inputs, setInputs] = useState<FormInputs>({
     firstname: "",
     lastname: "",
@@ -51,28 +47,28 @@ export default function SignUpPage() {
     confirmPassword: "",
   });
 
-  function handleFormFields(e: any) {
-    const { name, value } = e.target;
-    setInputs((values: FormInputs) => ({ ...values, [name]: value }));
-  }
+  const watchPasswordFields = watch(["password", "confirmPassword"]);
 
-  async function onSubmit() {
+  const onSubmit: SubmitHandler<FormInputs> = async (inputs) => {
     await axios
       .post(signUpURL, {
         firstname: inputs.firstname,
+        lastname: inputs.lastname,
         username: inputs.username,
         email: inputs.email,
         password: inputs.password,
         confirmPassword: inputs.confirmPassword,
       })
       .then((res) => {
+        console.log(res.data);
         if (res.data === "User Registration Successful!") {
           navigate("/");
         } else {
           return;
         }
-      });
-  }
+      })
+      .catch((err) => console.log(err));
+  };
   return (
     // Sign Up Page Container
     <div className="flex flex-col">
@@ -81,7 +77,10 @@ export default function SignUpPage() {
         Sign Up <br /> to get started!
       </h1>
       {/*Main Form*/}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <form
+        onSubmit={() => handleSubmit(onSubmit)}
+        className="flex flex-col gap-2"
+      >
         {/*First and Last Name*/}
         <div className="flex flex-row justify-center gap-2">
           {/* First Name */}
@@ -93,21 +92,24 @@ export default function SignUpPage() {
               placeholder="First Name"
               {...register("firstname", {
                 required: "This field is required!",
-                min: 2,
-                max: 10,
-                validate: (value) => {
-                  // Check if value length in range
-                  return value.length <= 10 && value.length >= 2
-                    ? false
-                    : "Must be 2 to 10 characters!";
+                minLength: { value: 2, message: "Minimum 2 characters" },
+                maxLength: { value: 15, message: "Maximum 15 characters" },
+                pattern: {
+                  value: new RegExp(`^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$`),
+                  message: "Please enter a valid name",
+                },
+                onChange: (e) => {
+                  setInputs({ ...inputs, firstname: e.target.value });
                 },
               })}
               value={inputs.firstname}
-              onChange={handleFormFields}
             />
             {/* First Name Error Message */}
             {errors.firstname?.message ? (
-              <span style={errorStyle}>{errors.firstname?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.firstname?.message}
+              </span>
             ) : (
               <span></span>
             )}
@@ -121,21 +123,28 @@ export default function SignUpPage() {
               placeholder="Last Name"
               {...register("lastname", {
                 required: false,
-                min: 2,
-                max: 10,
-                validate: (value) => {
-                  // Check if value length in range
-                  return value !== "" && value.length >= 2 && value.length <= 10
-                    ? false
-                    : "Must be 2 to 10 characters!";
+                minLength: { value: 0, message: "" },
+                maxLength: { value: 15, message: "Maximum 15 characters" },
+                pattern: {
+                  value: new RegExp(`^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$`),
+                  message: "Please enter a valid name",
+                },
+                validate: (value) =>
+                  value.length > 0 && value.length < 2
+                    ? "Minimum 2 characters!"
+                    : false,
+                onChange: (e) => {
+                  setInputs({ ...inputs, lastname: e.target.value });
                 },
               })}
               value={inputs.lastname}
-              onChange={handleFormFields}
             />
             {/* Last Name Error Message */}
             {errors.lastname?.message ? (
-              <span style={errorStyle}>{errors.lastname?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.lastname?.message}
+              </span>
             ) : (
               <span></span>
             )}
@@ -152,21 +161,20 @@ export default function SignUpPage() {
               placeholder="Username"
               {...register("username", {
                 required: "This field is required!",
-                min: 5,
-                max: 15,
-                validate: (value) => {
-                  // Check if value in range
-                  return value.length > 15 || value.length < 5
-                    ? "Can only be 5 to 15 characters!"
-                    : false;
+                minLength: { value: 5, message: "Minimum 5 characters!" },
+                maxLength: { value: 15, message: "Maximum 15 characters!" },
+                onChange: (e) => {
+                  setInputs({ ...inputs, username: e.target.value });
                 },
               })}
               value={inputs.username}
-              onChange={handleFormFields}
             />
             {/* Username Error Message */}
             {errors.username?.message ? (
-              <span style={errorStyle}>{errors.username?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.username?.message}
+              </span>
             ) : (
               <span></span>
             )}
@@ -180,13 +188,18 @@ export default function SignUpPage() {
               placeholder="Email"
               {...register("email", {
                 required: "This field is required!",
+                onChange: (e) => {
+                  setInputs({ ...inputs, email: e.target.value });
+                },
               })}
               value={inputs.email}
-              onChange={handleFormFields}
             />
             {/* Email Error Message */}
             {errors.email?.message ? (
-              <span style={errorStyle}>{errors.email?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.email?.message}
+              </span>
             ) : (
               <span></span>
             )}
@@ -200,21 +213,19 @@ export default function SignUpPage() {
               placeholder="Password"
               {...register("password", {
                 required: "This field is required!",
-                min: 8,
-                max: 64,
-                validate: (value) => {
-                  // Check if password is of correct length
-                  return value.length < 8 || value.length > 64
-                    ? "Can only be 8 to 64 characters!"
-                    : false;
+                minLength: { value: 8, message: "Minimum 8 characters!" },
+                onChange: (e) => {
+                  setInputs({ ...inputs, password: e.target.value });
                 },
               })}
               value={inputs.password}
-              onChange={handleFormFields}
             />
             {/* Password Error Message */}
             {errors.password?.message ? (
-              <span style={errorStyle}>{errors.password?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.password?.message}
+              </span>
             ) : (
               <span></span>
             )}
@@ -230,17 +241,22 @@ export default function SignUpPage() {
                 required: "This field is required!",
                 validate: (value) => {
                   // Check if passwords match
-                  return value === watchPasswords[0]
+                  return value === watchPasswordFields[0]
                     ? false
                     : "Passwords do not match!";
                 },
+                onChange: (e) => {
+                  setInputs({ ...inputs, confirmPassword: e.target.value });
+                },
               })}
               value={inputs.confirmPassword}
-              onChange={handleFormFields}
             />
             {/* Confirm Password Error Message*/}
             {errors.confirmPassword?.message ? (
-              <span style={errorStyle}>{errors.confirmPassword?.message}</span>
+              <span className={errorStyle}>
+                <BsExclamationTriangle className="pt-1" size={20} />
+                {errors.confirmPassword?.message}
+              </span>
             ) : (
               <span></span>
             )}

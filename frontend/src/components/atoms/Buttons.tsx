@@ -9,6 +9,8 @@ type HomePageButtonProps = {
 
 type DashboardButtonProps = {
   type: string;
+  logoutBtnStyle?: string;
+  addTodoToggleButtonStyle?: string;
   onClick: () => void;
 };
 
@@ -20,8 +22,10 @@ const HomePageButtonStyle =
   "w-[20vw] h-[10vh] border-white border-2 bg-transparent text-white font-mono text-xl hover:bg-white hover:text-black hover:cursor-pointer";
 
 const LogoutButtonStyle =
-  "w-20 h-10 border-white border-2 text-white font-serif font-normal text-md mr-10 hover:bg-white hover:text-black";
+  "w-20 h-10 border-white border-2 font-mono text-white text-lg font-bold text-md mr-10 hover:bg-white hover:text-black";
 
+const AddTodoToggleButtonStyle =
+  "w-[100%] border-white border-2 bg-black font-mono font-bold text-white py-1 px-2 hover:cursor-pointer hover:bg-white hover:text-black hover:border-black";
 export const SubmitButton = ({ type }: SubmitButtonProps) => {
   switch (type) {
     case "SignUp":
@@ -53,7 +57,7 @@ export const HomePageButton = ({ type, onClick }: HomePageButtonProps) => {
             className={HomePageButtonStyle}
             onClick={onClick}
           >
-            Sign Up!
+            Sign Up
           </button>
         </>
       );
@@ -72,21 +76,23 @@ export const HomePageButton = ({ type, onClick }: HomePageButtonProps) => {
   }
 };
 
-export const DashboardButton = ({ type, onClick }: DashboardButtonProps) => {
+export const DashboardButton = ({
+  type,
+  logoutBtnStyle = LogoutButtonStyle,
+  addTodoToggleButtonStyle = AddTodoToggleButtonStyle,
+  onClick,
+}: DashboardButtonProps) => {
   switch (type) {
     case "Logout":
       return (
-        <button className={LogoutButtonStyle} onClick={onClick}>
+        <button className={logoutBtnStyle} onClick={onClick}>
           Logout
         </button>
       );
 
     case "AddTodoToggle":
       return (
-        <button
-          className="w-[100%] border-black border-2 bg-black text-white py-1"
-          onClick={onClick}
-        >
+        <button className={addTodoToggleButtonStyle} onClick={onClick}>
           Add Todo
         </button>
       );
