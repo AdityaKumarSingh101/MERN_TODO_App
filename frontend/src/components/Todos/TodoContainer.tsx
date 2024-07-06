@@ -146,7 +146,7 @@ export const TodoContainer = ({
               </option>
               {todoTagOptions.map((tag, index) => {
                 return (
-                  <option className="bg-gray-300 " key={index}>
+                  <option className="bg-gray-500 text-white" key={index}>
                     {tag}
                   </option>
                 );

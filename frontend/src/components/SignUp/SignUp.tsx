@@ -28,6 +28,14 @@ export default function SignUpPage() {
     formState: { errors },
     handleSubmit,
   } = useForm<FormInputs>({
+    defaultValues: {
+      firstname: "",
+      lastname: "",
+      username: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
     mode: "onChange",
   });
 

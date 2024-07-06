@@ -50,6 +50,19 @@ export default function Todos({ userid }: { userid: string }) {
   // Toggle showing the add todo form
   const [toggleAdd, setToggleAdd] = useState<boolean>(false);
 
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [todosPerPage, setTodosPerPage] = useState<number>(5);
+  const todosPerPageOptions = [];
+
+  // Set the values for todosPerPageOptions
+  const maxTodosPerPage = 20;
+  const todosPerPageIncrement = 5;
+  for (let i = 0; i <= maxTodosPerPage; i += todosPerPageIncrement) {
+    if (i % todosPerPageIncrement === 0 && i !== 0) {
+      todosPerPageOptions.push(i);
+    }
+  }
+
   // Resposnse returns an array of todos, and this function maps the response to each todo object, then updates the state
   const setTodosFromResponse = (todoResponse: Todo[]) => {
     const newTodos = todoResponse.map((todo: Todo) => ({
@@ -111,33 +124,59 @@ export default function Todos({ userid }: { userid: string }) {
     ResetTodoInputFields();
   };
 
+  // Logic for pagination
+  const indexOfLastTodo = currentPage * todosPerPage;
+  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(todos.length / todosPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
   return (
     <>
       {/* Disables all elements of the TODO UI until data loads */}
       {!isLoading ? (
         <div>
-          {/* Todo List and Search Container */}
+          {/* Todo List, Search, and Todos Per Page Select Option Container */}
           <div className="mx-auto">
-            {/* Search Container */}
+            {/* Todos Per Page Select Option Container */}
             <div className="mb-2">
+              <span>
+                <select
+                  className="w-[5%] p-[6.5px] pt-[9.5px] font-bold text-center font-mono border-black border-2 border-r-0 bg-gray-400 hover:cursor-pointer hover:bg-white focus:outline-none focus:bg-white appearance-none "
+                  onChange={(e) => {
+                    let number = Number(e.target.value);
+                    setTodosPerPage(number);
+                  }}
+                >
+                  {todosPerPageOptions.map((numberOfTodos) => {
+                    return (
+                      <option
+                        className="bg-gray-500 text-white"
+                        key={numberOfTodos}
+                        value={numberOfTodos}
+                      >
+                        {numberOfTodos}
+                      </option>
+                    );
+                  })}
+                </select>
+              </span>
               {/* Search selection filter */}
               <select
-                className="w-[20%] p-[6.5px] pt-[9.5px] font-bold text-center font-mono border-black border-2 border-r-0 bg-gray-400 hover:cursor-pointer hover:bg-white focus:outline-none focus:bg-white appearance-none "
+                className="w-[15%] p-[6.5px] pt-[9.5px] font-bold text-center font-mono border-black border-2 border-r-0 bg-gray-400 hover:cursor-pointer hover:bg-white focus:outline-none focus:bg-white appearance-none "
                 onChange={(e) => setSearchBy(e.target.value)}
               >
                 <option
                   selected
                   disabled
                   hidden
-                  className="bg-gray-500 text-white hover:bg-white"
+                  className="bg-gray-500 text-white"
                   value=""
                 >
                   Search By:
                 </option>
-                <option
-                  className="bg-gray-500 text-white hover:bg-white"
-                  value=""
-                >
+                <option className="bg-gray-500 text-white " value="">
                   No Filter
                 </option>
                 <option className="bg-gray-500 text-white" value="task">
@@ -200,6 +239,7 @@ export default function Todos({ userid }: { userid: string }) {
                     return true;
                   }
                 })
+                .slice(indexOfFirstTodo, indexOfLastTodo)
                 .map((todo) => {
                   return (
                     <div key={todo._id}>
@@ -244,6 +284,50 @@ export default function Todos({ userid }: { userid: string }) {
                 No Todos Found. Click the Add todos button to get started!
               </span>
             )}
+            <div className="flex flex-row justify-center mt-5">
+              <span>
+                <button
+                  className="w-10 h-10 border-black border-2 border-r-0 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
+                  onClick={() => {
+                    currentPage > 1
+                      ? setCurrentPage(currentPage - 1)
+                      : setCurrentPage(1);
+                  }}
+                >
+                  L
+                </button>
+              </span>
+              <>
+                {pageNumbers.map((number) => {
+                  return (
+                    <span key={number}>
+                      <button
+                        onClick={() => setCurrentPage(number)}
+                        className={
+                          currentPage === number
+                            ? "border-2 border-black border-r-0 w-10 h-10 bg-black text-white font-mono"
+                            : "border-2 border-black border-r-0 w-10 h-10 bg-white text-black font-mono hover:bg-black hover:text-white"
+                        }
+                      >
+                        {number}
+                      </button>
+                    </span>
+                  );
+                })}
+              </>
+              <span>
+                <button
+                  className="w-10 h-10 border-black border-2 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
+                  onClick={() => {
+                    currentPage < pageNumbers.length
+                      ? setCurrentPage(currentPage + 1)
+                      : setCurrentPage(pageNumbers.length);
+                  }}
+                >
+                  R
+                </button>
+              </span>
+            </div>
           </div>
           {/*Add TODO Container 
           - Shows the form when the add button is clicked and 
