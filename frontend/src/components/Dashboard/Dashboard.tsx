@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 import Todos from "../Todos/Todos";
 import { DashboardButton } from "../atoms/Buttons";
+import Loading from "../atoms/Loading";
 
 type UserData = {
   id: string;
@@ -29,6 +30,7 @@ export default function Dashboard() {
     username: "",
     email: "",
   });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   function setData(user: any) {
     setUserData({
@@ -41,12 +43,17 @@ export default function Dashboard() {
       email: user.email,
     });
   }
+
+  // Fetch data from backend and set it to state
   async function fetchUserData() {
+    setIsLoading(true);
+
     await axios
       .get(fetchDataURL)
       .then((res) => {
         const user = res.data;
         setData(user);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -70,9 +77,12 @@ export default function Dashboard() {
       {/*Contains the Dashboard NavBar */}
       <div className="flex flex-row justify-between p-1 bg-black text-white">
         <h1 className="mt-1 ml-3 font-mono font-bold text-lg">
-          Hello, {userData.username}
+          {!isLoading ? (
+            <span>Hello, {userData.username}</span>
+          ) : (
+            <Loading text={"Loading Data..."} />
+          )}
         </h1>
-
         <DashboardButton type="Logout" onClick={handleLogout} />
       </div>
       {/*Contains the rest of dashboard*/}

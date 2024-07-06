@@ -26,6 +26,7 @@ const LogoutButtonStyle =
 
 const AddTodoToggleButtonStyle =
   "w-[100%] border-white border-2 bg-black font-mono font-bold text-white py-1 px-2 hover:cursor-pointer hover:bg-white hover:text-black hover:border-black";
+
 export const SubmitButton = ({ type }: SubmitButtonProps) => {
   switch (type) {
     case "SignUp":

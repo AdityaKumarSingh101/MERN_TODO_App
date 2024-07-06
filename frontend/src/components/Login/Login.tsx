@@ -2,31 +2,24 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { SubmitButton } from "../atoms/Buttons";
 
-interface IFormInput {
+type FormInput = {
   username: string;
   password: string;
-}
+};
 
 export default function LoginPage() {
   const loginURL = "http://localhost:3001/Login";
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
 
   const {
     register,
     formState: { errors },
     handleSubmit,
-  } = useForm<IFormInput>({
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
+  } = useForm<FormInput>();
 
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [error, setError] = useState<boolean>(false);
@@ -35,29 +28,31 @@ export default function LoginPage() {
     "flex flex-row justify-center items-center bg-red-500 text-white rounded-b-md py-1";
   const inputFieldStyle = "h-10 p-2 border-black border-2 focus:outline-none";
 
-  async function onSubmit() {
-    await axios.post(loginURL, { username, password }).then((res) => {
-      if (res.data === "Please enter username / password!") {
-        setError(true);
-        setErrorMessage(res.data);
-        return;
-      } else if (res.data === "User not found!") {
-        setError(true);
-        setErrorMessage(res.data);
-        return;
-      } else if (res.data === "Username / Password Incorrect!") {
-        setError(true);
-        setErrorMessage(res.data);
-        return;
-      } else {
-        setError(false);
-        setErrorMessage("");
-        if (!localStorage.getItem("UserId"))
-          localStorage.setItem("UserId", res.data.id);
-        navigate("/Dashboard");
-      }
-    });
-  }
+  const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    await axios
+      .post(loginURL, { username: data.username, password: data.password })
+      .then((res) => {
+        if (res.data === "Please enter username / password!") {
+          setError(true);
+          setErrorMessage(res.data);
+          return;
+        } else if (res.data === "User not found!") {
+          setError(true);
+          setErrorMessage(res.data);
+          return;
+        } else if (res.data === "Username / Password Incorrect!") {
+          setError(true);
+          setErrorMessage(res.data);
+          return;
+        } else {
+          setError(false);
+          setErrorMessage("");
+          if (!localStorage.getItem("UserId"))
+            localStorage.setItem("UserId", res.data.id);
+          navigate("/Dashboard");
+        }
+      });
+  };
   return (
     // Login Page Container
     <div className="w-80 min-h-10">
@@ -89,10 +84,6 @@ export default function LoginPage() {
               className={inputFieldStyle}
               placeholder="Username"
               {...register("username", { required: "This field is required!" })}
-              value={username}
-              onChange={(e) => {
-                setUsername(e.target.value);
-              }}
             />
             {/* Error Message */}
             {errors.username?.message ? (
@@ -112,10 +103,6 @@ export default function LoginPage() {
               className={inputFieldStyle}
               placeholder="Password"
               {...register("password", { required: "This field is required!" })}
-              value={password}
-              onChange={(e) => {
-                setPassword(e.target.value);
-              }}
             />
             {/* Error Message */}
             {errors.password?.message ? (

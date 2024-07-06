@@ -46,9 +46,9 @@ export const TodoContainer = ({
     <>
       {!toggleEdit ? (
         // Todo Box
-        <div className="flex flex-row bg-gray-400 border-black border-2 border-t-0 justify-start min-w-[65vw] min-h-[5vh] max-h-[20vh]">
+        <div className="grid grid-flow-row grid-cols-6 gap-5 border-black border-2 border-t-0 bg-gray-300 items-center">
           {/*Task Container*/}
-          <span className="w-[30vw] my-auto px-3 flex-wrap flex-grow flex-shrink">
+          <span className="col-span-3 pl-5 ">
             {completed ? (
               <span>
                 <del>
@@ -62,7 +62,7 @@ export const TodoContainer = ({
             )}
           </span>
           {/*Creation Date Container*/}
-          <span className="flex justify-start min-w-[15vw] my-auto flex-wrap">
+          <span className="col-span-1">
             {completed ? (
               <span>
                 <del>{createdOn}</del>
@@ -72,60 +72,63 @@ export const TodoContainer = ({
             )}
           </span>
           {/*Tags Container*/}
-          <span className="min-w-[10vw] flex flex-row justify-start">
-            <span className="p-1 text-xs min-h-5 text-white flex">
-              {completed ? (
-                <span
-                  className={
-                    !tag ? "" : "bg-black rounded-sm text-white p-1 my-auto"
-                  }
-                >
-                  <del>{tag}</del>
-                </span>
-              ) : (
-                <span
-                  className={
-                    !tag ? "" : "bg-black rounded-sm text-white p-1 my-auto"
-                  }
-                >
-                  {tag}
-                </span>
-              )}
-            </span>
+          <span className="col-span-1 p-1 text-xs min-h-5 text-white flex">
+            {completed ? (
+              <span
+                className={
+                  !tag
+                    ? ""
+                    : "bg-black rounded-sm text-white p-1 my-auto mx-auto"
+                }
+              >
+                <del>{tag}</del>
+              </span>
+            ) : (
+              <span
+                className={
+                  !tag ? "" : "bg-black rounded-sm text-white p-1 m-auto"
+                }
+              >
+                {tag}
+              </span>
+            )}
           </span>
           {/*Edit | Delete | Completed Checkbox Container*/}
-          <span className="flex flex-row flex-grow gap-5 justify-center items-center min-w-[5vw] px-1">
+          <span className="col-span-1 flex flex-row flex-grow gap-5 justify-start items-center min-w-[5vw] pr-5">
             {/*Edit Todo Button*/}
             <span
-              className="hover: cursor-pointer"
+              className="hover:cursor-pointer hover:bg-black rounded-md p-1"
               onClick={() => setToggleEdit(true)}
             >
-              <BsPencilSquare />
+              <BsPencilSquare className="hover:text-white" />
             </span>
             {/*Delete Todo Button*/}
-            <span className="hover: cursor-pointer" onClick={deleteTodo}>
-              <BsFillTrashFill />
+            <span
+              className="hover:cursor-pointer hover:bg-black rounded-md p-1"
+              onClick={deleteTodo}
+            >
+              <BsFillTrashFill className="hover:text-white" />
             </span>
             {/*Completed Check Mark*/}
             <span
-              className="hover: cursor-pointer"
+              className="hover:cursor-pointer hover:bg-black rounded-md p-1"
               onClick={() => {
                 setUpdatedTodo({ ...updatedTodo, completed: !completed });
                 updateTodo(updatedTodo);
               }}
             >
-              <BsClipboard2CheckFill />
+              <BsClipboard2CheckFill className="hover:text-white" />
             </span>
           </span>
         </div>
       ) : (
-        // Update Todo Task and Tag Container
-        <div className="flex flex-row bg-gray-400 min-w-[65vw] min-h-[5vh] max-h-[10vh] border-black border-2 border-t-0">
-          {/*Update Task*/}
-          <span className="flex min-w-[80%] justify-start items-center ">
+        // Update Todo Container
+        <div className="grid grid-cols-6 bg-gray-300 border-black border-2 border-t-0 py-2">
+          {/*Update Task and Tag*/}
+          <span className="col-span-5 flex flex-row">
             <input
               type="text"
-              className="w-[90%] h-[95%] bg-transparent px-2 focus:outline-none"
+              className="w-[100%] ml-5 bg-gray-300 focus:outline-none"
               value={updatedTodo.task}
               onChange={(e) =>
                 setUpdatedTodo({ ...updatedTodo, task: e.target.value })
@@ -133,34 +136,40 @@ export const TodoContainer = ({
             />
             {/*Update Tag*/}
             <select
+              className="bg-transparent border-none appearance-auto hover:cursor-pointer focus:outline-none px-2"
               onChange={(e) =>
                 setUpdatedTodo({ ...updatedTodo, tag: e.target.value })
               }
-              className="w-[30%] h-[95%] bg-white px-2 focus:outline-none "
             >
-              <option>Select a tag...</option>
+              <option className="" selected disabled hidden>
+                Select a tag...
+              </option>
               {todoTagOptions.map((tag, index) => {
-                return <option key={index}>{tag}</option>;
+                return (
+                  <option className="bg-gray-300 " key={index}>
+                    {tag}
+                  </option>
+                );
               })}
             </select>
           </span>
           {/*Buttons Container*/}
-          <span className="flex flex-row gap-3 items-center min-w-[20%] pl-7 ">
+          <span className="col-span-1 flex flex-row gap-5 justify-center">
             {/*Submit Updated Todo Button*/}
             <span
-              className="hover:cursor-pointer"
+              className="hover:cursor-pointer hover:bg-black rounded-md p-1"
               onClick={async () => {
                 updateTodo(updatedTodo);
                 setToggleEdit(false);
               }}
             >
-              <BsCheckSquareFill size={25} />
+              <BsCheckSquareFill size={25} className="hover:text-white" />
             </span>
             {/*Cancel Edit Button*/}
-            <span className="">
+            <span className="hover:cursor-pointer hover:bg-black rounded-md p-1">
               <BsFillXSquareFill
                 size={25}
-                className="hover:cursor-pointer"
+                className="hover:text-white "
                 onClick={() => setToggleEdit(false)}
               />
             </span>

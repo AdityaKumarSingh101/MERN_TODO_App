@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -13,6 +12,7 @@ type FormInputs = {
   password: string;
   confirmPassword: string;
 };
+
 export default function SignUpPage() {
   const signUpURL = "http://localhost:3001/SignUp";
   const navigate = useNavigate();
@@ -24,43 +24,23 @@ export default function SignUpPage() {
 
   const {
     register,
-    watch,
+    getValues,
     formState: { errors },
     handleSubmit,
-  } = useForm({
-    defaultValues: {
-      firstname: "",
-      lastname: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
+  } = useForm<FormInputs>({
     mode: "onChange",
   });
 
-  // Form state data
-  const [inputs, setInputs] = useState<FormInputs>({
-    firstname: "",
-    lastname: "",
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const watchPasswordFields = watch(["password", "confirmPassword"]);
-
-  // Given as a callback to handleSubmit fuc=nction, runs after react-hook-form validates the form data
-  const onSubmit: SubmitHandler<FormInputs> = async (inputs) => {
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    console.log(data);
     await axios
       .post(signUpURL, {
-        firstname: inputs.firstname,
-        lastname: inputs.lastname,
-        username: inputs.username,
-        email: inputs.email,
-        password: inputs.password,
-        confirmPassword: inputs.confirmPassword,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        username: data.username,
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
       })
       .then((res) => {
         console.log(res.data);
@@ -72,6 +52,7 @@ export default function SignUpPage() {
       })
       .catch((err) => console.log(err));
   };
+
   return (
     // Sign Up Page Container
     <div className="flex flex-col">
@@ -80,10 +61,7 @@ export default function SignUpPage() {
         Sign Up <br /> to get started!
       </h1>
       {/*Main Form*/}
-      <form
-        onSubmit={() => handleSubmit(onSubmit)}
-        className="flex flex-col gap-2"
-      >
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
         {/*First and Last Name*/}
         <div className="flex flex-row justify-center gap-2">
           {/* First Name */}
@@ -97,15 +75,7 @@ export default function SignUpPage() {
                 required: "This field is required!",
                 minLength: { value: 2, message: "Minimum 2 characters" },
                 maxLength: { value: 15, message: "Maximum 15 characters" },
-                pattern: {
-                  value: new RegExp(`^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$`),
-                  message: "Please enter a valid name",
-                },
-                onChange: (e) => {
-                  setInputs({ ...inputs, firstname: e.target.value });
-                },
               })}
-              value={inputs.firstname}
             />
             {/* First Name Error Message */}
             {errors.firstname?.message ? (
@@ -128,19 +98,7 @@ export default function SignUpPage() {
                 required: false,
                 minLength: { value: 0, message: "" },
                 maxLength: { value: 15, message: "Maximum 15 characters" },
-                pattern: {
-                  value: new RegExp(`^[A-Za-z\s]{1,}[\.]{0,1}[A-Za-z\s]{0,}$`),
-                  message: "Please enter a valid name",
-                },
-                validate: (value) =>
-                  value.length > 0 && value.length < 2
-                    ? "Minimum 2 characters!"
-                    : false,
-                onChange: (e) => {
-                  setInputs({ ...inputs, lastname: e.target.value });
-                },
               })}
-              value={inputs.lastname}
             />
             {/* Last Name Error Message */}
             {errors.lastname?.message ? (
@@ -166,11 +124,7 @@ export default function SignUpPage() {
                 required: "This field is required!",
                 minLength: { value: 5, message: "Minimum 5 characters!" },
                 maxLength: { value: 15, message: "Maximum 15 characters!" },
-                onChange: (e) => {
-                  setInputs({ ...inputs, username: e.target.value });
-                },
               })}
-              value={inputs.username}
             />
             {/* Username Error Message */}
             {errors.username?.message ? (
@@ -191,11 +145,7 @@ export default function SignUpPage() {
               placeholder="Email"
               {...register("email", {
                 required: "This field is required!",
-                onChange: (e) => {
-                  setInputs({ ...inputs, email: e.target.value });
-                },
               })}
-              value={inputs.email}
             />
             {/* Email Error Message */}
             {errors.email?.message ? (
@@ -217,11 +167,7 @@ export default function SignUpPage() {
               {...register("password", {
                 required: "This field is required!",
                 minLength: { value: 8, message: "Minimum 8 characters!" },
-                onChange: (e) => {
-                  setInputs({ ...inputs, password: e.target.value });
-                },
               })}
-              value={inputs.password}
             />
             {/* Password Error Message */}
             {errors.password?.message ? (
@@ -244,15 +190,11 @@ export default function SignUpPage() {
                 required: "This field is required!",
                 validate: (value) => {
                   // Check if passwords match
-                  return value === watchPasswordFields[0]
+                  return value === getValues().password
                     ? false
                     : "Passwords do not match!";
                 },
-                onChange: (e) => {
-                  setInputs({ ...inputs, confirmPassword: e.target.value });
-                },
               })}
-              value={inputs.confirmPassword}
             />
             {/* Confirm Password Error Message*/}
             {errors.confirmPassword?.message ? (

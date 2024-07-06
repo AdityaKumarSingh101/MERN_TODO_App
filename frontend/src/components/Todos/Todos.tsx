@@ -9,9 +9,9 @@ import Loading from "../atoms/Loading";
 type Todo = {
   _id: string;
   task: string;
-  completed: boolean;
-  createdOn: string;
   tag: string;
+  createdOn: string;
+  completed: boolean;
 };
 
 type UpdatedTodo = {
@@ -67,6 +67,7 @@ export default function Todos({ userid }: { userid: string }) {
     ResetTodoInputFields();
     setToggleAdd(false);
   };
+
   const ResetTodoInputFields = () => {
     setTodo({
       _id: "",
@@ -80,13 +81,12 @@ export default function Todos({ userid }: { userid: string }) {
   // Fetch all todos from backend
   async function fetchAllTodos() {
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 3000);
+
     await axios
       .get(fetchTodoDataURL)
       .then((res) => {
         setTodosFromResponse(res.data);
+        setIsLoading(false);
       })
       .catch((err) => console.log(err));
   }
@@ -122,16 +122,36 @@ export default function Todos({ userid }: { userid: string }) {
             <div className="mb-2">
               {/* Search selection filter */}
               <select
-                className="w-[20%] p-[8.5px] border-black border-2 border-r-0 bg-gray-400 focus:outline-none focus:bg-white select:selected:bg-blue-500"
+                className="w-[20%] p-[6.5px] pt-[9.5px] font-bold text-center font-mono border-black border-2 border-r-0 bg-gray-400 hover:cursor-pointer hover:bg-white focus:outline-none focus:bg-white appearance-none "
                 onChange={(e) => setSearchBy(e.target.value)}
               >
-                <option value="">
-                  <b>Select</b>
+                <option
+                  selected
+                  disabled
+                  hidden
+                  className="bg-gray-500 text-white hover:bg-white"
+                  value=""
+                >
+                  Search By:
                 </option>
-                <option value="task">Task</option>
-                <option value="tag">Tag</option>
-                <option value="completed">Completed</option>
-                <option value="notCompleted">Not Completed</option>
+                <option
+                  className="bg-gray-500 text-white hover:bg-white"
+                  value=""
+                >
+                  No Filter
+                </option>
+                <option className="bg-gray-500 text-white" value="task">
+                  Task
+                </option>
+                <option className="bg-gray-500 text-white" value="tag">
+                  Tag
+                </option>
+                <option className="bg-gray-500 text-white" value="completed">
+                  Completed
+                </option>
+                <option className="bg-gray-500 text-white" value="notCompleted">
+                  Not Completed
+                </option>
               </select>
               {/* Search Text Input */}
               <input
@@ -164,7 +184,7 @@ export default function Todos({ userid }: { userid: string }) {
                   } else if (searchBy === "notCompleted") {
                     return todo.completed === false;
                   }
-                  // Seach all todos if no selection is provided
+                  // Search all todos if no selection is provided
                   else if (searchBy === "") {
                     return searchText
                       ? todo.task
@@ -251,7 +271,7 @@ export default function Todos({ userid }: { userid: string }) {
         </div>
       ) : (
         <span>
-          <Loading />
+          <Loading text={"Loading Todos... Please Wait"} />
         </span>
       )}
     </>
