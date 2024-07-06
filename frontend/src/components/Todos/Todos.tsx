@@ -94,7 +94,6 @@ export default function Todos({ userid }: { userid: string }) {
   // Fetch all todos from backend
   async function fetchAllTodos() {
     setIsLoading(true);
-
     await axios
       .get(fetchTodoDataURL)
       .then((res) => {
