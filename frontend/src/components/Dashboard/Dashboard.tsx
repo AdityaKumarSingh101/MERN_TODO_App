@@ -78,7 +78,7 @@ export default function Dashboard() {
       <div className="flex flex-row justify-between p-1 bg-black text-white">
         <h1 className="mt-1 ml-3 font-mono font-bold text-lg">
           {!isLoading ? (
-            <span>Hello, {userData.username}</span>
+            <span>Hello, {userData.name.first}</span>
           ) : (
             <Loading text={"Loading Data..."} />
           )}

@@ -135,7 +135,7 @@ export default function Todos({ userid }: { userid: string }) {
     <>
       {/* Disables all elements of the TODO UI until data loads */}
       {!isLoading ? (
-        <div>
+        <div className="w-[75vw]">
           {/* Todo List, Search, and Todos Per Page Select Option Container */}
           <div className="mx-auto">
             {/* Todos Per Page Select Option Container */}
@@ -148,11 +148,11 @@ export default function Todos({ userid }: { userid: string }) {
                     setTodosPerPage(number);
                   }}
                 >
-                  {todosPerPageOptions.map((numberOfTodos) => {
+                  {todosPerPageOptions.map((numberOfTodos, index) => {
                     return (
                       <option
                         className="bg-gray-500 text-white"
-                        key={numberOfTodos}
+                        key={index}
                         value={numberOfTodos}
                       >
                         {numberOfTodos}
@@ -167,7 +167,7 @@ export default function Todos({ userid }: { userid: string }) {
                 onChange={(e) => setSearchBy(e.target.value)}
               >
                 <option
-                  selected
+                  defaultValue=""
                   disabled
                   hidden
                   className="bg-gray-500 text-white"
@@ -239,9 +239,9 @@ export default function Todos({ userid }: { userid: string }) {
                   }
                 })
                 .slice(indexOfFirstTodo, indexOfLastTodo)
-                .map((todo) => {
+                .map((todo, index) => {
                   return (
-                    <div key={todo._id}>
+                    <div key={index}>
                       <TodoContainer
                         task={todo.task}
                         createdOn={todo.createdOn}
@@ -283,50 +283,6 @@ export default function Todos({ userid }: { userid: string }) {
                 No Todos Found. Click the Add todos button to get started!
               </span>
             )}
-            <div className="flex flex-row justify-center mt-5">
-              <span>
-                <button
-                  className="w-10 h-10 border-black border-2 border-r-0 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
-                  onClick={() => {
-                    currentPage > 1
-                      ? setCurrentPage(currentPage - 1)
-                      : setCurrentPage(1);
-                  }}
-                >
-                  L
-                </button>
-              </span>
-              <>
-                {pageNumbers.map((number) => {
-                  return (
-                    <span key={number}>
-                      <button
-                        onClick={() => setCurrentPage(number)}
-                        className={
-                          currentPage === number
-                            ? "border-2 border-black border-r-0 w-10 h-10 bg-black text-white font-mono"
-                            : "border-2 border-black border-r-0 w-10 h-10 bg-white text-black font-mono hover:bg-black hover:text-white"
-                        }
-                      >
-                        {number}
-                      </button>
-                    </span>
-                  );
-                })}
-              </>
-              <span>
-                <button
-                  className="w-10 h-10 border-black border-2 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
-                  onClick={() => {
-                    currentPage < pageNumbers.length
-                      ? setCurrentPage(currentPage + 1)
-                      : setCurrentPage(pageNumbers.length);
-                  }}
-                >
-                  R
-                </button>
-              </span>
-            </div>
           </div>
           {/*Add TODO Container 
           - Shows the form when the add button is clicked and 
@@ -350,6 +306,55 @@ export default function Todos({ userid }: { userid: string }) {
                 />
               </div>
             )}
+          </div>
+          {/* Pagination Container */}
+
+          <div className="flex flex-row justify-center mt-5">
+            {/* Previous Page Button */}
+            <span>
+              <button
+                className="w-10 h-10 border-black border-2 border-r-0 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
+                onClick={() => {
+                  currentPage > 1
+                    ? setCurrentPage(currentPage - 1)
+                    : setCurrentPage(1);
+                }}
+              >
+                &lt;
+              </button>
+            </span>
+            {/* Page Buttons */}
+            <>
+              {pageNumbers.map((number) => {
+                return (
+                  <span key={number}>
+                    <button
+                      onClick={() => setCurrentPage(number)}
+                      className={
+                        currentPage === number
+                          ? "border-2 border-black border-r-0 w-10 h-10 bg-black text-white font-mono"
+                          : "border-2 border-black border-r-0 w-10 h-10 bg-white text-black font-mono hover:bg-black hover:text-white"
+                      }
+                    >
+                      {number}
+                    </button>
+                  </span>
+                );
+              })}
+            </>
+            {/* Next Page Button */}
+            <span>
+              <button
+                className="w-10 h-10 border-black border-2 bg-white text-black font-mono font-bold hover:bg-black hover:text-white"
+                onClick={() => {
+                  currentPage < pageNumbers.length
+                    ? setCurrentPage(currentPage + 1)
+                    : setCurrentPage(pageNumbers.length);
+                }}
+              >
+                &gt;
+              </button>
+            </span>
           </div>
         </div>
       ) : (

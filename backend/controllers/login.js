@@ -4,14 +4,13 @@ const User = require("../models/UserModel");
 const userLogin = async (req, res) => {
   let { username, password } = req.body;
 
-  // Check if password is entered
+  // Check if fields are not empty
   if (!username || username === "" || !password || password === "") {
     return res.json("Please enter username / password!");
   }
 
   // Check if user exists
   let user = await User.findOne({ username: username });
-
   if (!user) {
     return res.json("User not found!");
   }
@@ -28,6 +27,7 @@ const userLogin = async (req, res) => {
     email: user.email,
     todos: user.todos,
   };
+
   // Check if password matches
   if (passMatch) {
     return res.json(userData);

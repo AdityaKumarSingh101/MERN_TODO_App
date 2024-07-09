@@ -28,37 +28,11 @@ export default function SignUpPage() {
     formState: { errors },
     handleSubmit,
   } = useForm<FormInputs>({
-    defaultValues: {
-      firstname: "",
-      lastname: "",
-      username: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    },
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<FormInputs> = (data) => {
     console.log(data);
-    await axios
-      .post(signUpURL, {
-        firstname: data.firstname,
-        lastname: data.lastname,
-        username: data.username,
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data === "User Registration Successful!") {
-          navigate("/");
-        } else {
-          return;
-        }
-      })
-      .catch((err) => console.log(err));
   };
 
   return (

@@ -58,8 +58,8 @@ export default function LoginPage() {
     <div className="w-80 min-h-10">
       {/* Login Text */}
       <h1 className="text-center font-mono text-black pb-20 font-bold text-3xl">
-        Login <br />
-        to your account...
+        Hey there! <br />
+        Welcome back!
       </h1>
       {/* Error Box */}
       <div>

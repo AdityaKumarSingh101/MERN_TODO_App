@@ -1,3 +1,5 @@
+import { ChangeEvent, useState } from "react";
+
 type AddTodoFormProps = {
   TodoTagOptions: string[];
   AddTodo: () => void;
@@ -13,6 +15,9 @@ export default function AddTodoForm({
   Todo,
   SetTodo,
 }: AddTodoFormProps) {
+  // States for creating a custom tag
+  const [isCustomTag, setIsCustomTag] = useState<boolean>(false);
+
   return (
     <>
       <div className="flex flex-row gap-2 w-[100%]">
@@ -32,15 +37,33 @@ export default function AddTodoForm({
           <span className="bg-gray-500 text-black font-mono h-[100%] w-[30px] ml-3 pr-10 pl-2 py-1 border-2 border-r-0 border-black align-middle">
             <b>Tag</b>
           </span>
-          <select
-            className="bg-gray-300 border-black border-2 w-[20%] px-2 mr-3 focus:outline-none focus:bg-white"
-            onChange={(e) => SetTodo({ ...Todo, tag: e.target.value })}
-          >
-            <option value="">Select...</option>
-            {TodoTagOptions.map((tag, index) => {
-              return <option key={index}>{tag}</option>;
-            })}
-          </select>
+          {/* Default tags */}
+          {!isCustomTag ? (
+            <select
+              className="bg-gray-300 border-black border-2 w-[20%] px-2 mr-3 focus:outline-none focus:bg-white"
+              onChange={(e) => {
+                if (e.target.value === "Custom Tag") {
+                  setIsCustomTag(true);
+                } else {
+                  SetTodo({ ...Todo, tag: e.target.value });
+                }
+              }}
+            >
+              <option value="">Select...</option>
+              {TodoTagOptions.map((tag, index) => {
+                return <option key={index}>{tag}</option>;
+              })}
+              <option value="Custom Tag">Custom Tag</option>
+            </select>
+          ) : (
+            // Custom Tag Input
+            <span>
+              <input
+                className="bg-gray-300 h-full border-black border-2 w-full px-2 mr-3 focus:outline-none focus:bg-white"
+                onChange={(e) => SetTodo({ ...Todo, tag: e.target.value })}
+              />
+            </span>
+          )}
         </div>
         {/*Add Todo Button*/}
         <button
