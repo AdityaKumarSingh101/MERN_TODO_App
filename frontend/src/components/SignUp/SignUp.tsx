@@ -31,10 +31,6 @@ export default function SignUpPage() {
     mode: "onChange",
   });
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data);
-  };
-
   return (
     // Sign Up Page Container
     <div className="flex flex-col">
@@ -43,7 +39,28 @@ export default function SignUpPage() {
         Sign Up <br /> to get started!
       </h1>
       {/*Main Form*/}
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+      <form
+        onSubmit={handleSubmit(async (data) => {
+          await axios
+            .post(signUpURL, {
+              firstname: data.firstname,
+              lastname: data.lastname,
+              username: data.username,
+              email: data.email,
+              password: data.password,
+              confirmPassword: data.confirmPassword,
+            })
+            .then((res) => {
+              if (res.data === "User Registration Successful!") {
+                navigate("/");
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        })}
+        className="flex flex-col gap-2"
+      >
         {/*First and Last Name*/}
         <div className="flex flex-row justify-center gap-2">
           {/* First Name */}

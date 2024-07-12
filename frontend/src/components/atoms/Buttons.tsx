@@ -32,7 +32,7 @@ export const SubmitButton = ({ type }: SubmitButtonProps) => {
     case "SignUp":
       return (
         <>
-          <button type="button" className={SubmitButtonStyle}>
+          <button type="submit" className={SubmitButtonStyle}>
             Sign Up
           </button>
         </>
