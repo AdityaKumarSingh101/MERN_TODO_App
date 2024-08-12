@@ -12,7 +12,7 @@ type FormInput = {
 };
 
 export default function LoginPage() {
-  const loginURL = "http://localhost:3001/Login";
+  const loginURL = "http://localhost:3002/Login";
   const navigate = useNavigate();
 
   const {

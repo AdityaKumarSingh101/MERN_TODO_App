@@ -30,7 +30,7 @@ export const TodoContainer = ({
   updateTodo,
   deleteTodo,
 }: TodoContainerProps) => {
-  let [toggleEdit, setToggleEdit] = useState<boolean>(false);
+  const [toggleEdit, setToggleEdit] = useState<boolean>(false);
 
   // Used to store the state of the todo being updated,
   const [updatedTodo, setUpdatedTodo] = useState<Todo>({

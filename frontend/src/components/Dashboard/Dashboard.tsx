@@ -19,7 +19,7 @@ type UserData = {
 export default function Dashboard() {
   const userId = localStorage.getItem("UserId");
 
-  const fetchDataURL = `http://localhost:3001/users/${userId}`;
+  const fetchDataURL = `http://localhost:3002/users/${userId}`;
 
   const [userData, setUserData] = useState<UserData>({
     id: "",

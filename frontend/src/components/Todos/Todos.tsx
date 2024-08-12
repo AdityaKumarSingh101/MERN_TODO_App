@@ -22,10 +22,10 @@ type UpdatedTodo = {
 
 export default function Todos({ userid }: { userid: string }) {
   // API Endpoints
-  const fetchTodoDataURL: string = `http://localhost:3001/users/${userid}/todos`;
-  const addTodoURL: string = `http://localhost:3001/users/${userid}/todos/create`;
-  const updateTodoURL: string = `http://localhost:3001/users/${userid}/todos/update/`;
-  const deleteTodoURL: string = `http://localhost:3001/users/${userid}/todos/delete/`;
+  const fetchTodoDataURL: string = `http://localhost:3002/users/${userid}/todos`;
+  const addTodoURL: string = `http://localhost:3002/users/${userid}/todos/create`;
+  const updateTodoURL: string = `http://localhost:3002/users/${userid}/todos/update/`;
+  const deleteTodoURL: string = `http://localhost:3002/users/${userid}/todos/delete/`;
 
   // Todo state variables
   const [todo, setTodo] = useState<Todo>({
@@ -144,7 +144,7 @@ export default function Todos({ userid }: { userid: string }) {
                 <select
                   className="w-[5%] p-[6.5px] pt-[9.5px] font-bold text-center font-mono border-black border-2 border-r-0 bg-gray-400 hover:cursor-pointer hover:bg-white focus:outline-none focus:bg-white appearance-none "
                   onChange={(e) => {
-                    let number = Number(e.target.value);
+                    const number = Number(e.target.value);
                     setTodosPerPage(number);
                   }}
                 >

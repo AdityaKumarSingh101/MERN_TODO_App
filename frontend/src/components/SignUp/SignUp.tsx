@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { BsExclamationTriangle } from "react-icons/bs";
 import { SubmitButton } from "../atoms/Buttons";
 
@@ -14,7 +14,7 @@ type FormInputs = {
 };
 
 export default function SignUpPage() {
-  const signUpURL = "http://localhost:3001/SignUp";
+  const signUpURL = "http://localhost:3002/SignUp";
   const navigate = useNavigate();
 
   const errorStyle =
